@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="Elementer/Favcon.png">
+    <title>Arbeid — Sway Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=13">
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <header class="navbar scrolled" id="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand visible"><img src="assets/sd-logo.png" alt="Sway Design" class="nav-logo"></a>
+            <nav class="nav-links">
+                <a href="index.html" data-text="HJEM" class="nav-home">HJEM</a>
+                <a href="index.html#arbeid" data-text="ARBEID">ARBEID</a>
+                <a href="om-meg.html" data-text="OM MEG">OM MEG</a>
+                <a href="index.html#kontakt" data-text="KONTAKT">KONTAKT</a>
+            </nav>
+            <button class="nav-toggle" id="navToggle" aria-label="Åpne meny" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- GRAFISK DESIGN header -->
+    <div class="arbeid-page-header">
+        <div class="container">
+            <h1 class="arbeid-page-title">GRAFISK DESIGN</h1>
+        </div>
+    </div>
+
+    <!-- GRAFISK DESIGN sections — rendered dynamically from /api/arbeid -->
+    <main id="arbeid-main"></main>
+
+    <!-- VIDEO DESIGN header -->
+    <div id="video-design" class="arbeid-page-header video-page-header">
+        <div class="container">
+            <h1 class="arbeid-page-title">VIDEO DESIGN</h1>
+        </div>
+    </div>
+
+    <!-- VIDEO DESIGN sections — rendered dynamically from /api/video -->
+    <main id="video-main"></main>
+
+    <!-- VIDEO MODAL -->
+    <div class="video-modal" id="video-modal" aria-hidden="true">
+        <div class="video-modal-overlay" id="video-modal-overlay"></div>
+        <div class="video-modal-inner">
+            <button class="video-modal-close" id="video-modal-close" aria-label="Lukk">✕</button>
+            <!-- Custom player -->
+            <div class="video-player-wrap">
+                <video id="video-modal-player" playsinline></video>
+                <!-- invisible overlay for click-to-pause -->
+                <div class="vc-click-zone" id="vc-click-zone"></div>
+                <div class="vc-controls">
+                    <div class="vc-progress-row">
+                        <input type="range" class="vc-progress" id="vc-progress" value="0" min="0" step="0.01">
+                    </div>
+                    <div class="vc-bottom-row">
+                        <div class="vc-left-group">
+                            <!-- Play/Pause -->
+                            <button class="vc-btn" id="vc-playpause" aria-label="Play/Pause">
+                                <svg id="vc-play-icon" viewBox="0 0 24 24" fill="white">
+                                    <path d="M8 5.14v13.72a1.5 1.5 0 0 0 2.28 1.29l10.5-6.86a1.5 1.5 0 0 0 0-2.58L10.28 3.85A1.5 1.5 0 0 0 8 5.14z"/>
+                                </svg>
+                                <svg id="vc-pause-icon" viewBox="0 0 24 24" fill="white" style="display:none">
+                                    <rect x="5" y="4" width="4" height="16" rx="1.5"/>
+                                    <rect x="15" y="4" width="4" height="16" rx="1.5"/>
+                                </svg>
+                            </button>
+                            <!-- Volume: icon LEFT of slider -->
+                            <div class="vc-vol-group">
+                                <button class="vc-btn" id="vc-mute" aria-label="Mute">
+                                    <svg id="vc-vol-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                                    </svg>
+                                    <svg id="vc-mute-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                                        <line x1="23" y1="9" x2="17" y2="15"/>
+                                        <line x1="17" y1="9" x2="23" y2="15"/>
+                                    </svg>
+                                </button>
+                                <input type="range" class="vc-vol-slider" id="vc-vol-slider" value="100" min="0" max="100" step="1">
+                            </div>
+                            <!-- Time -->
+                            <span class="vc-time" id="vc-time">0:00 / 0:00</span>
+                        </div>
+                        <div class="vc-right-group">
+                            <!-- Fullscreen -->
+                            <button class="vc-btn" id="vc-fullscreen" aria-label="Fullscreen">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15 3 21 3 21 9"/>
+                                    <polyline points="9 21 3 21 3 15"/>
+                                    <line x1="21" y1="3" x2="14" y2="10"/>
+                                    <line x1="3" y1="21" x2="10" y2="14"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMAGE LIGHTBOX -->
+    <div class="img-lightbox" id="img-lightbox" aria-hidden="true">
+        <div class="img-lightbox-overlay" id="img-lightbox-overlay"></div>
+        <button class="img-lightbox-close" id="img-lightbox-close" aria-label="Lukk">✕</button>
+        <img class="img-lightbox-img" id="img-lightbox-img" src="" alt="">
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <p class="footer-credit">Designed by Jonathan Kindingstad, built by Claude</p>
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="footer-ig" aria-label="Instagram">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+            </a>
+        </div>
+    </footer>
+
+<script src="script.js?v=13"></script>
+<script>
+// ════════════════════════════════════════════════════════════════
+//  GRAFISK DESIGN
+// ════════════════════════════════════════════════════════════════
+
+const SECTION_ORDER = [
+    { folder: 'Plakat design', displayName: 'Plakatdesign', type: 'poster'   },
+    { folder: 'Kles design',   displayName: 'Klesdesign',   type: 'clothing' },
+];
+
+let imgBase = '/arbeid-image';
+
+async function initArbeid() {
+    const main = document.getElementById('arbeid-main');
+    let data;
+    try {
+        const res = await fetch('/api/arbeid');
+        if (res.ok && res.headers.get('Content-Type')?.includes('json')) {
+            data = await res.json();
+        } else throw new Error('not json');
+        // Empty response = sandbox blocked the server; fall back to manifest
+        if (Object.keys(data).length === 0) throw new Error('empty');
+    } catch {
+        try {
+            const res = await fetch('arbeid-manifest.json');
+            if (!res.ok) throw new Error(res.status);
+            data = await res.json();
+            imgBase = 'arbeid-files';
+        } catch {
+            main.innerHTML = '<p style="color:#888;text-align:center;padding:80px 24px">Kunne ikke laste bilder.</p>';
+            return;
+        }
+    }
+
+    const knownFolders = new Set(SECTION_ORDER.map(s => s.folder));
+    const extra = Object.keys(data)
+        .filter(f => !knownFolders.has(f))
+        .map(f => ({ folder: f, displayName: f, type: 'poster' }));
+
+    let num = 0;
+    for (const cfg of [...SECTION_ORDER, ...extra]) {
+        const files = data[cfg.folder];
+        if (!files?.length) continue;
+        main.appendChild(buildSection(cfg, files, ++num, imgBase));
+    }
+
+    if (num === 0)
+        main.innerHTML = '<p style="color:#888;text-align:center;padding:80px 24px">Ingen bilder ennå.</p>';
+}
+
+// ════════════════════════════════════════════════════════════════
+//  VIDEO DESIGN
+// ════════════════════════════════════════════════════════════════
+
+const VIDEO_SECTION_ORDER = [
+    { folder: 'Motion Graphics',  displayName: 'Motion Graphics'  },
+    { folder: 'Videoredigering',  displayName: 'Videoredigering'  },
+];
+
+let videoBase = '/video-file';
+
+async function initVideo() {
+    const main = document.getElementById('video-main');
+    let data;
+    try {
+        const res = await fetch('/api/video');
+        if (res.ok && res.headers.get('Content-Type')?.includes('json')) {
+            data = await res.json();
+        } else throw new Error('not json');
+        // Empty response = sandbox blocked the server; fall back to manifest
+        if (Object.keys(data).length === 0) throw new Error('empty');
+    } catch {
+        try {
+            const res = await fetch('video-manifest.json');
+            if (!res.ok) throw new Error(res.status);
+            data = await res.json();
+            videoBase = 'video-files';
+        } catch {
+            main.innerHTML = '<p style="color:#888;text-align:center;padding:80px 24px">Ingen videoer ennå.</p>';
+            return;
+        }
+    }
+
+    const knownFolders = new Set(VIDEO_SECTION_ORDER.map(s => s.folder));
+    const extra = Object.keys(data)
+        .filter(f => !knownFolders.has(f))
+        .map(f => ({ folder: f, displayName: f }));
+
+    let num = 0;
+    for (const cfg of [...VIDEO_SECTION_ORDER, ...extra]) {
+        const files = data[cfg.folder];
+        if (!files?.length) continue;
+        main.appendChild(buildVideoSection(cfg, files, ++num));
+    }
+
+    if (num === 0)
+        main.innerHTML = '<p style="color:#888;text-align:center;padding:80px 24px">Ingen videoer ennå.</p>';
+}
+
+// ════════════════════════════════════════════════════════════════
+//  SHARED SECTION BUILDER
+// ════════════════════════════════════════════════════════════════
+
+function buildSection(config, files, num, base) {
+    const section = document.createElement('section');
+    section.className = 'arbeid-section' + (num === 1 ? ' arbeid-section--first' : '');
+
+    const container = document.createElement('div');
+    container.className = 'container';
+
+    container.innerHTML = `
+        <div class="arbeid-section-label">
+            <span class="arbeid-section-num">${String(num).padStart(2, '0')}</span>
+            <h2 class="arbeid-section-name">${config.displayName}</h2>
+        </div>
+    `;
+
+    if (config.type === 'clothing') {
+        container.appendChild(buildClothingGrid(config.folder, files, base));
+    } else {
+        container.appendChild(buildPosterGrid(config.folder, files, base));
+    }
+
+    section.appendChild(container);
+    return section;
+}
+
+function buildVideoSection(config, files, num) {
+    const section = document.createElement('section');
+    section.className = 'arbeid-section' + (num === 1 ? ' arbeid-section--first' : '');
+
+    const container = document.createElement('div');
+    container.className = 'container';
+
+    container.innerHTML = `
+        <div class="arbeid-section-label">
+            <span class="arbeid-section-num">${String(num).padStart(2, '0')}</span>
+            <h2 class="arbeid-section-name">${config.displayName}</h2>
+        </div>
+    `;
+    container.appendChild(buildVideoGrid(config.folder, files));
+
+    section.appendChild(container);
+    return section;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  GRID BUILDERS
+// ════════════════════════════════════════════════════════════════
+
+function buildPosterGrid(folder, files, base) {
+    const grid = document.createElement('div');
+    grid.className = 'poster-grid';
+
+    files.forEach(filename => {
+        const card = document.createElement('div');
+        card.className = 'poster-card';
+        const img = document.createElement('img');
+        img.src     = `${base}/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}`;
+        img.alt     = filename.replace(/[-_]/g, ' ').replace(/\.[^.]+$/, '');
+        img.loading = 'lazy';
+        card.appendChild(img);
+        card.addEventListener('click', () => openLightbox(img.src, img.alt));
+        grid.appendChild(card);
+    });
+
+    // "Flere kommer snart" placeholder — ONLY on Plakat design
+    if (folder === 'Plakat design') {
+        const ph = document.createElement('div');
+        ph.className = 'poster-card poster-placeholder';
+        ph.innerHTML = '<span>Flere kommer<br>snart...</span>';
+        grid.appendChild(ph);
+    }
+
+    return grid;
+}
+
+function buildClothingGrid(folder, files, base) {
+    const grid = document.createElement('div');
+    grid.className = 'clothing-grid';
+
+    files.forEach(filename => {
+        const card = document.createElement('div');
+        card.className = 'clothing-card';
+        const img = document.createElement('img');
+        img.src     = `${base}/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}`;
+        img.alt     = filename.replace(/[-_]/g, ' ').replace(/\.[^.]+$/, '');
+        img.loading = 'lazy';
+        card.appendChild(img);
+        card.addEventListener('click', () => openLightbox(img.src, img.alt));
+        grid.appendChild(card);
+    });
+
+    // No placeholder for clothing grid
+    return grid;
+}
+
+function buildVideoGrid(folder, files) {
+    const grid = document.createElement('div');
+    grid.className = 'video-grid';
+
+    files.forEach(filename => {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+
+        // Video element — visible, acts as thumbnail (seeked to 3s)
+        const video = document.createElement('video');
+        video.src       = `${videoBase}/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}`;
+        video.preload   = 'metadata';
+        video.muted     = true;
+        video.playsInline = true;
+
+        // Seek to 3s once metadata is available so the poster frame shows that moment
+        video.addEventListener('loadedmetadata', () => {
+            video.currentTime = Math.min(3, video.duration * 0.1);
+        });
+
+        const overlay = document.createElement('div');
+        overlay.className = 'video-play-overlay';
+        overlay.innerHTML = `
+            <svg class="video-play-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 5.14v13.72a1.5 1.5 0 0 0 2.28 1.29l10.5-6.86a1.5 1.5 0 0 0 0-2.58L10.28 3.85A1.5 1.5 0 0 0 8 5.14z" fill="white"/>
+            </svg>
+        `;
+
+        card.appendChild(video);
+        card.appendChild(overlay);
+
+        const src = `${videoBase}/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}`;
+        card.addEventListener('click', () => openVideoModal(src));
+
+        grid.appendChild(card);
+    });
+
+    // No placeholder for video grids
+    return grid;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  CUSTOM VIDEO PLAYER
+// ════════════════════════════════════════════════════════════════
+
+const modal       = document.getElementById('video-modal');
+const player      = document.getElementById('video-modal-player');
+const progress    = document.getElementById('vc-progress');
+const timeEl      = document.getElementById('vc-time');
+const playPauseBtn = document.getElementById('vc-playpause');
+const playIcon    = document.getElementById('vc-play-icon');
+const pauseIcon   = document.getElementById('vc-pause-icon');
+const muteBtn     = document.getElementById('vc-mute');
+const volIcon     = document.getElementById('vc-vol-icon');
+const muteIcon    = document.getElementById('vc-mute-icon');
+const volSlider   = document.getElementById('vc-vol-slider');
+const clickZone   = document.getElementById('vc-click-zone');
+const fsBtn       = document.getElementById('vc-fullscreen');
+
+function fmtTime(s) {
+    if (!isFinite(s)) return '0:00';
+    const m = Math.floor(s / 60);
+    const sec = String(Math.floor(s % 60)).padStart(2, '0');
+    return `${m}:${sec}`;
+}
+
+function syncPlayPause() {
+    if (player.paused) {
+        playIcon.style.display  = '';
+        pauseIcon.style.display = 'none';
+    } else {
+        playIcon.style.display  = 'none';
+        pauseIcon.style.display = '';
+    }
+}
+
+function syncVolume() {
+    const muted = player.muted || player.volume === 0;
+    volIcon.style.display  = muted ? 'none' : '';
+    muteIcon.style.display = muted ? '' : 'none';
+}
+
+player.addEventListener('timeupdate', () => {
+    if (!isFinite(player.duration)) return;
+    const pct = (player.currentTime / player.duration) * 100;
+    progress.value = pct;
+    // Update the filled track colour via CSS custom property
+    progress.style.setProperty('--pct', pct + '%');
+    timeEl.textContent = `${fmtTime(player.currentTime)} / ${fmtTime(player.duration)}`;
+});
+
+player.addEventListener('play',  syncPlayPause);
+player.addEventListener('pause', syncPlayPause);
+player.addEventListener('volumechange', syncVolume);
+
+player.addEventListener('loadedmetadata', () => {
+    progress.max = 100;
+    timeEl.textContent = `0:00 / ${fmtTime(player.duration)}`;
+});
+
+// Click on progress bar
+progress.addEventListener('input', () => {
+    if (isFinite(player.duration))
+        player.currentTime = (progress.value / 100) * player.duration;
+});
+
+// Click zone = toggle play/pause
+clickZone.addEventListener('click', () => {
+    if (player.paused) player.play().catch(() => {});
+    else player.pause();
+});
+
+playPauseBtn.addEventListener('click', () => {
+    if (player.paused) player.play().catch(() => {});
+    else player.pause();
+});
+
+// Volume slider
+volSlider.addEventListener('input', () => {
+    player.volume = volSlider.value / 100;
+    player.muted  = player.volume === 0;
+    syncVolume();
+});
+
+// Volume button — toggle slider visibility + mute
+const volGroup = document.querySelector('.vc-vol-group');
+muteBtn.addEventListener('click', () => {
+    const isOpen = volGroup.classList.contains('vc-vol-open');
+    if (isOpen) {
+        volGroup.classList.remove('vc-vol-open');
+    } else {
+        volGroup.classList.add('vc-vol-open');
+        // Also unmute if muted
+        if (player.muted) {
+            player.muted = false;
+            if (player.volume === 0) { player.volume = 0.5; volSlider.value = 50; }
+        }
+    }
+    syncVolume();
+});
+
+// Fullscreen
+fsBtn.addEventListener('click', () => {
+    const wrap = document.querySelector('.video-player-wrap');
+    if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+    } else {
+        wrap.requestFullscreen().catch(() => {});
+    }
+});
+
+function openVideoModal(src) {
+    player.src = src;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    progress.value = 0;
+    timeEl.textContent = '0:00 / 0:00';
+    syncPlayPause();
+    syncVolume();
+    player.play().catch(() => {});
+}
+
+function closeVideoModal() {
+    player.pause();
+    player.src = '';
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+document.getElementById('video-modal-close').addEventListener('click', closeVideoModal);
+document.getElementById('video-modal-overlay').addEventListener('click', closeVideoModal);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeVideoModal(); closeLightbox(); } });
+
+// ════════════════════════════════════════════════════════════════
+//  IMAGE LIGHTBOX
+// ════════════════════════════════════════════════════════════════
+
+const lightbox    = document.getElementById('img-lightbox');
+const lightboxImg = document.getElementById('img-lightbox-img');
+let lbScale = 1;
+
+function setLightboxZoom(scale, e) {
+    lbScale = Math.min(4, Math.max(1, scale));
+    // Anchor the zoom on the clicked point (only when starting from 1×,
+    // where the rect is untransformed)
+    if (e) {
+        const r = lightboxImg.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width) * 100;
+        const y = ((e.clientY - r.top) / r.height) * 100;
+        lightboxImg.style.transformOrigin = `${x}% ${y}%`;
+    }
+    lightboxImg.style.transform = `scale(${lbScale})`;
+    lightboxImg.classList.toggle('zoomed', lbScale > 1);
+}
+
+function openLightbox(src, alt) {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt || '';
+    lightboxImg.style.transformOrigin = '50% 50%';
+    setLightboxZoom(1);
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    if (!lightbox.classList.contains('active')) return;
+    lightbox.classList.remove('active');
+    lightboxImg.src = '';
+    document.body.style.overflow = '';
+}
+
+// Click image: zoom in at that point / zoom back out
+lightboxImg.addEventListener('click', e => {
+    if (lbScale > 1) setLightboxZoom(1);
+    else setLightboxZoom(2.5, e);
+});
+
+// Scroll wheel: zoom in/out gradually
+lightbox.addEventListener('wheel', e => {
+    e.preventDefault();
+    setLightboxZoom(lbScale - e.deltaY * 0.0025);
+}, { passive: false });
+
+document.getElementById('img-lightbox-close').addEventListener('click', closeLightbox);
+document.getElementById('img-lightbox-overlay').addEventListener('click', closeLightbox);
+
+// ════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════
+// The browser's native hash jump fires before the sections above the
+// anchor exist, so re-anchor once content is in — and again as images
+// above the anchor load and shift the layout. Stop the moment the user
+// scrolls on their own so we don't fight them.
+let userTookOver = false;
+['wheel', 'touchstart', 'keydown'].forEach(ev =>
+    window.addEventListener(ev, () => { userTookOver = true; }, { once: true, passive: true })
+);
+
+function scrollToHash() {
+    if (userTookOver || !location.hash) return;
+    const target = document.getElementById(location.hash.slice(1));
+    if (target) target.scrollIntoView({ behavior: 'instant', block: 'start' });
+}
+
+Promise.all([initArbeid(), initVideo()]).then(() => {
+    // Fade in the freshly-built galleries.
+    if (window.registerReveals) window.registerReveals();
+
+    if (!location.hash) return;
+    scrollToHash();
+    document.querySelectorAll('#arbeid-main img').forEach(img => {
+        if (!img.complete) img.addEventListener('load', scrollToHash, { once: true });
+    });
+});
+</script>
+</body>
+</html>

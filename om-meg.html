@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="Elementer/Favcon.png">
+    <title>Om meg — Sway Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=13">
+    <style>
+        /* ── Om meg page ── */
+        .om-page {
+            min-height: 100vh;
+            padding-top: 80px; /* navbar height */
+            display: flex;
+            align-items: center; /* center content; no rigid 100vh lock */
+        }
+
+        .om-grid {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 60px;
+            width: 100%;
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 48px var(--pad-x) 48px;
+            align-items: center;
+        }
+
+        /* ── Left: text content ── */
+        .om-left {
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+        }
+
+        /* Nudge the text up a bit on desktop */
+        @media (min-width: 861px) {
+            .om-left {
+                transform: translateY(-50px);
+            }
+        }
+
+        .om-section {}
+
+        .om-heading {
+            font-family: var(--font-body);
+            font-size: 30px;
+            font-weight: 700;
+            line-height: 1.15;
+            color: var(--white);
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .om-heading em {
+            font-family: var(--font-body);
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        .om-heading em.serif {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .om-body {
+            font-size: 15px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.65);
+            max-width: 520px;
+        }
+
+        /* ── Software badges ── */
+        .software-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .sw-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .sw-key {
+            width: 62px;
+            height: 62px;
+            border-radius: 10px;
+            background: linear-gradient(180deg, #323232 0%, #272727 100%);
+            border: 2.5px solid rgba(255, 255, 255, 0.13);
+            border-top: 2.5px solid rgba(255, 255, 255, 0.45);
+            border-bottom: 8px solid rgba(0, 0, 0, 0.4);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: 0.02em;
+            transition: border-bottom-width 0.1s, transform 0.1s;
+        }
+
+        /* Press down only while actively clicked/pressed (not on hover) */
+        .sw-badge:active .sw-key,
+        .sw-key.pressed {
+            border-bottom-width: 2px;
+            transform: translateY(2px);
+        }
+
+        .sw-key {
+            cursor: pointer;
+        }
+
+        .sw-bar {
+            width: 62px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        /* ── Right: portrait ── */
+        .om-right {
+            position: relative;
+        }
+
+        .om-portrait {
+            width: 100%;
+            height: auto;
+            max-height: calc(100vh - 200px);
+            object-fit: cover;
+            object-position: center top;
+            border-radius: 18px;
+            display: block;
+            filter: grayscale(100%);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 860px) {
+            .om-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+                padding: 5px 24px 64px;
+            }
+
+            .om-right {
+                order: -1;
+            }
+
+            .om-portrait {
+                max-height: 420px;
+                width: 100%;
+                object-fit: cover;
+                object-position: center 20%;
+            }
+
+            .om-heading {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <header class="navbar scrolled" id="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand visible"><img src="assets/sd-logo.png" alt="Sway Design" class="nav-logo"></a>
+            <nav class="nav-links">
+                <a href="index.html" data-text="HJEM" class="nav-home">HJEM</a>
+                <a href="index.html#arbeid" data-text="ARBEID">ARBEID</a>
+                <a href="om-meg.html" data-text="OM MEG" style="color: var(--white); font-weight: 800;">OM MEG</a>
+                <a href="index.html#kontakt" data-text="KONTAKT">KONTAKT</a>
+            </nav>
+            <button class="nav-toggle" id="navToggle" aria-label="Åpne meny" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="om-page">
+        <div class="om-grid">
+
+            <!-- LEFT: text -->
+            <div class="om-left">
+
+                <div class="om-section">
+                    <h2 class="om-heading">Hva er <em>Sway Design?</em></h2>
+                    <p class="om-body">Sway Design er designvirksomheten drevet av Jonathan Kindingstad. Jeg er 23 år gammel og studerer design i Bergen. Etter flere år foran skjermen for å utvikle meg har jeg nå åpnet meg opp for arbeid for andre.</p>
+                </div>
+
+                <div class="om-section">
+                    <h2 class="om-heading">Hva jobber jeg med?</h2>
+                    <p class="om-body">Jeg anser meg selv som en generelt kreativ person. Dette har gjort at jeg interesserer meg for diverse områder som plakatdesign, klesdesign, magasindesign, motion graphics og videoredigering.</p>
+                </div>
+
+                <div class="om-section">
+                    <h2 class="om-heading">Programvare <em class="serif">(for andre designere)</em></h2>
+                    <div class="software-row">
+                        <div class="sw-badge">
+                            <div class="sw-key">Ps</div>
+                        </div>
+                        <div class="sw-badge">
+                            <div class="sw-key">Ae</div>
+                        </div>
+                        <div class="sw-badge">
+                            <div class="sw-key">Pr</div>
+                        </div>
+                        <div class="sw-badge">
+                            <div class="sw-key">Ai</div>
+                        </div>
+                        <div class="sw-badge">
+                            <div class="sw-key">Id</div>
+                        </div>
+                        <div class="sw-badge">
+                            <div class="sw-key">Xd</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT: portrait -->
+            <div class="om-right">
+                <img src="Elementer/Meg.JPG" alt="Jonathan Kindingstad" class="om-portrait">
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js?v=13"></script>
+</body>
+</html>

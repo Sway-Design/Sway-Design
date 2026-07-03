@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "portfolio",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/tmp/serve_portfolio.py"],
+      "port": 3456,
+      "autoPort": false
+    }
+  ]
+}

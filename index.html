@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="Elementer/Favcon.png">
+    <title>Sway Design — Jonathan Kindingstad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=13">
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <header class="navbar" id="navbar">
+        <div class="nav-inner">
+            <a href="#hjem" class="nav-brand"><img src="assets/sd-logo.png" alt="Sway Design" class="nav-logo"></a>
+            <nav class="nav-links">
+                <a href="#hjem" data-text="HJEM" class="nav-home">HJEM</a>
+                <a href="#arbeid" data-text="ARBEID">ARBEID</a>
+                <a href="om-meg.html" data-text="OM MEG">OM MEG</a>
+                <a href="#kontakt" data-text="KONTAKT">KONTAKT</a>
+            </nav>
+            <button class="nav-toggle" id="navToggle" aria-label="Åpne meny" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="hjem">
+        <div class="hero-bg"></div>
+        <div class="hero-inner">
+            <div class="hero-content">
+                <img src="assets/sd-logo.png" alt="Sway Design" class="hero-logo">
+                <span class="hero-byline">By JONATHAN KINDINGSTAD</span>
+                <p class="hero-sub">Designarbeid for små bedrifter med stil</p>
+                <a href="#arbeid" class="btn-outline">
+                    SE ARBEID
+                    <svg class="btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ARBEID -->
+    <section class="s-arbeid" id="arbeid">
+        <div class="container">
+            <h2 class="display-heading">ARBEID</h2>
+            <div class="work-grid">
+                <a href="arbeid.html" class="work-card">
+                    <img src="assets/folder-1-new.png" alt="Grafisk Design">
+                </a>
+                <a href="arbeid.html#video-design" class="work-card">
+                    <img src="assets/folder-2-new.png" alt="Videoredigering">
+                </a>
+                <a href="arbeid.html" class="work-card">
+                    <img src="assets/folder-3-new.png" alt="Kreativt Arbeid">
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUKTER -->
+    <section class="s-produkter">
+        <div class="container">
+            <div class="produkter-row">
+                <div class="poster-fan">
+                    <img src="assets/poster-3.png" alt="" class="fan-poster fan-back">
+                    <img src="assets/poster-2.png" alt="" class="fan-poster fan-mid">
+                    <img src="assets/poster-1.png" alt="" class="fan-poster fan-front">
+                </div>
+                <div class="produkter-copy">
+                    <h2 class="produkter-heading">Produkter som fremmer <em>ditt</em> uttrykk</h2>
+                    <p class="produkter-desc">I Sway Design fokuserer vi på å produsere arbeid som skaffer resultatene dere er på utkikk etter</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KONTAKT -->
+    <section class="s-kontakt" id="kontakt">
+        <div class="container">
+            <div class="kontakt-card">
+                <div class="kontakt-left">
+                    <span class="section-label amber">KONTAKT</span>
+                    <h2 class="kontakt-heading">La oss snakke om ideen <em>din</em></h2>
+                    <p class="kontakt-desc">Sway Design jobber for å skape langvarige samarbeid. Viktig å få frem ditt uttrykk, bli kjent med virksomheten.</p>
+
+                    <div class="contact-info">
+                        <a href="mailto:jonathan.kindingstad@gmail.com" class="contact-item">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                <path d="m22 7-10 7L2 7"/>
+                            </svg>
+                            jonathan.kindingstad@gmail.com
+                        </a>
+                        <div class="contact-item">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            Bergen, Norge
+                        </div>
+                    </div>
+
+                    <div class="ledig-badge">
+                        <span class="ledig-dot"></span>
+                        Ledig for arbeid
+                    </div>
+                </div>
+
+                <div class="kontakt-right">
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-field">
+                            <label for="f-name">Navn</label>
+                            <input type="text" id="f-name" name="name" autocomplete="name">
+                        </div>
+                        <div class="form-field">
+                            <label for="f-email">E-post</label>
+                            <input type="email" id="f-email" name="email" autocomplete="email">
+                        </div>
+                        <div class="form-field">
+                            <label for="f-company">Bedrift</label>
+                            <input type="text" id="f-company" name="company" autocomplete="organization">
+                        </div>
+                        <div class="form-field">
+                            <label for="f-message">Melding</label>
+                            <textarea id="f-message" name="message" rows="5"></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit" id="submitBtn">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <p class="footer-credit">Designed by Jonathan Kindingstad, built by Claude</p>
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="footer-ig" aria-label="Instagram">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+            </a>
+        </div>
+    </footer>
+
+    <script src="script.js?v=13"></script>
+</body>
+</html>

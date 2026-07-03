@@ -1,0 +1,14 @@
+# ── Tunge kildemapper og backuper – IKKE nødvendig for den publiserte siden ──
+# Den publiserte siden bruker arbeid-files/ og video-files/ (de statiske kopiene).
+# Originalvideoen på 251 MB ligger i Arbeid/ og holdes dermed utenfor GitHub.
+Arbeid/
+_image_originals/
+assets/arbeid/
+
+# ── Lokal utviklerserver (brukes ikke på GitHub Pages) ──
+serve.py
+*.command
+
+# ── Diverse ──
+.DS_Store
+sway-index.html

@@ -5,12 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="Elementer/Favcon.png">
     <title>Arbeid — Sway Design</title>
+    <meta name="description" content="Se arbeid fra Sway Design: plakatdesign, klesdesign, motion graphics, videoredigering, magasiner og malerier av Jonathan Kindingstad.">
+    <link rel="canonical" href="https://swaydesign.no/arbeid.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sway Design">
+    <meta property="og:locale" content="nb_NO">
+    <meta property="og:url" content="https://swaydesign.no/arbeid.html">
+    <meta property="og:title" content="Arbeid — Sway Design">
+    <meta property="og:description" content="Se arbeid fra Sway Design: plakatdesign, klesdesign, motion graphics, videoredigering, magasiner og malerier av Jonathan Kindingstad.">
+    <meta property="og:image" content="https://swaydesign.no/assets/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=13">
+    <link rel="stylesheet" href="style.css?v=30">
 </head>
 <body>
+
+    <!-- UNDER-CONSTRUCTION TICKER -->
+    <div class="site-ticker" aria-hidden="true">
+        <div class="site-ticker-track">
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+        </div>
+    </div>
 
     <!-- NAVIGATION -->
     <header class="navbar scrolled" id="navbar">
@@ -47,6 +77,26 @@
 
     <!-- VIDEO DESIGN sections — rendered dynamically from /api/video -->
     <main id="video-main"></main>
+
+    <!-- KREATIVT ARBEID header -->
+    <div id="kreativt-arbeid" class="arbeid-page-header video-page-header">
+        <div class="container">
+            <h1 class="arbeid-page-title">KREATIVT ARBEID</h1>
+        </div>
+    </div>
+
+    <!-- KREATIVT ARBEID sections — rendered dynamically -->
+    <main id="kreativt-main"></main>
+
+    <!-- COLLECTION MODAL (scrollable multi-image gallery) -->
+    <div class="collection-modal" id="collection-modal" aria-hidden="true">
+        <div class="collection-modal-overlay" id="collection-modal-overlay"></div>
+        <div class="collection-modal-header">
+            <span class="collection-modal-title" id="collection-modal-title"></span>
+            <button class="collection-modal-close" id="collection-modal-close" aria-label="Lukk">✕</button>
+        </div>
+        <div class="collection-modal-scroll" id="collection-modal-scroll"></div>
+    </div>
 
     <!-- VIDEO MODAL -->
     <div class="video-modal" id="video-modal" aria-hidden="true">
@@ -121,7 +171,7 @@
     <footer class="footer">
         <div class="container footer-inner">
             <p class="footer-credit">Designed by Jonathan Kindingstad, built by Claude</p>
-            <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="footer-ig" aria-label="Instagram">
+            <a href="https://www.instagram.com/sway_design/" target="_blank" rel="noopener" class="footer-ig" aria-label="Instagram">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
@@ -131,7 +181,7 @@
         </div>
     </footer>
 
-<script src="script.js?v=13"></script>
+<script src="script.js?v=31"></script>
 <script>
 // ════════════════════════════════════════════════════════════════
 //  GRAFISK DESIGN
@@ -166,7 +216,7 @@ async function initArbeid() {
         }
     }
 
-    const knownFolders = new Set(SECTION_ORDER.map(s => s.folder));
+    const knownFolders = new Set([...SECTION_ORDER, ...KREATIVT_SECTION_ORDER].map(s => s.folder));
     const extra = Object.keys(data)
         .filter(f => !knownFolders.has(f))
         .map(f => ({ folder: f, displayName: f, type: 'poster' }));
@@ -232,6 +282,49 @@ async function initVideo() {
 }
 
 // ════════════════════════════════════════════════════════════════
+//  KREATIVT ARBEID
+// ════════════════════════════════════════════════════════════════
+
+const KREATIVT_SECTION_ORDER = [
+    { folder: 'Her Loss Magasin', displayName: 'Magasiner', type: 'collection', coverIndex: 1 },
+    { folder: 'Malerier',         displayName: 'Malerier',           type: 'poster'     },
+];
+
+let kreativtBase = '/arbeid-image';
+
+async function initKreativt() {
+    const main = document.getElementById('kreativt-main');
+    let data;
+    try {
+        const res = await fetch('/api/arbeid');
+        if (res.ok && res.headers.get('Content-Type')?.includes('json')) {
+            data = await res.json();
+        } else throw new Error('not json');
+        if (Object.keys(data).length === 0) throw new Error('empty');
+    } catch {
+        try {
+            const res = await fetch('arbeid-manifest.json');
+            if (!res.ok) throw new Error(res.status);
+            data = await res.json();
+            kreativtBase = 'arbeid-files';
+        } catch {
+            main.innerHTML = '<p style="color:#888;text-align:center;padding:80px 24px">Kunne ikke laste bilder.</p>';
+            return;
+        }
+    }
+
+    let num = 0;
+    for (const cfg of KREATIVT_SECTION_ORDER) {
+        const files = data[cfg.folder];
+        if (!files?.length) continue;
+        main.appendChild(buildSection(cfg, files, ++num, kreativtBase));
+    }
+
+    if (num === 0)
+        main.innerHTML = '<p style="color:#888;text-align:center;padding:80px 24px">Ingen bilder ennå.</p>';
+}
+
+// ════════════════════════════════════════════════════════════════
 //  SHARED SECTION BUILDER
 // ════════════════════════════════════════════════════════════════
 
@@ -251,6 +344,8 @@ function buildSection(config, files, num, base) {
 
     if (config.type === 'clothing') {
         container.appendChild(buildClothingGrid(config.folder, files, base));
+    } else if (config.type === 'collection') {
+        container.appendChild(buildCollectionCover(config.folder, config.displayName, files, base, config.coverIndex ?? 0));
     } else {
         container.appendChild(buildPosterGrid(config.folder, files, base));
     }
@@ -326,6 +421,32 @@ function buildClothingGrid(folder, files, base) {
     });
 
     // No placeholder for clothing grid
+    return grid;
+}
+
+function buildCollectionCover(folder, displayName, files, base, coverIndex = 0) {
+    const grid = document.createElement('div');
+    grid.className = 'collection-grid';
+
+    const card = document.createElement('div');
+    card.className = 'collection-cover';
+
+    const img = document.createElement('img');
+    img.src     = `${base}/${encodeURIComponent(folder)}/${encodeURIComponent(files[coverIndex])}`;
+    img.alt     = displayName;
+    img.loading = 'lazy';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'collection-cover-overlay';
+    overlay.innerHTML = `
+        <span class="collection-cover-credit">Fotografi og bilder hentet fra nettet. Idé, konsept og utseende satt sammen av meg</span>
+    `;
+
+    card.appendChild(img);
+    card.appendChild(overlay);
+    card.addEventListener('click', () => openCollection(folder, displayName, files, base));
+    grid.appendChild(card);
+
     return grid;
 }
 
@@ -500,7 +621,7 @@ function closeVideoModal() {
 
 document.getElementById('video-modal-close').addEventListener('click', closeVideoModal);
 document.getElementById('video-modal-overlay').addEventListener('click', closeVideoModal);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeVideoModal(); closeLightbox(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeVideoModal(); closeLightbox(); closeCollection(); } });
 
 // ════════════════════════════════════════════════════════════════
 //  IMAGE LIGHTBOX
@@ -556,6 +677,39 @@ document.getElementById('img-lightbox-close').addEventListener('click', closeLig
 document.getElementById('img-lightbox-overlay').addEventListener('click', closeLightbox);
 
 // ════════════════════════════════════════════════════════════════
+//  COLLECTION MODAL (scrollable multi-image gallery)
+// ════════════════════════════════════════════════════════════════
+
+const collectionModal  = document.getElementById('collection-modal');
+const collectionScroll = document.getElementById('collection-modal-scroll');
+const collectionTitle  = document.getElementById('collection-modal-title');
+
+function openCollection(folder, displayName, files, base) {
+    collectionTitle.textContent = displayName;
+    collectionScroll.innerHTML = '';
+    files.forEach((filename, i) => {
+        const img = document.createElement('img');
+        img.src     = `${base}/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}`;
+        img.alt     = `${displayName} ${i + 1}`;
+        img.loading = i < 2 ? 'eager' : 'lazy';
+        collectionScroll.appendChild(img);
+    });
+    collectionScroll.scrollTop = 0;
+    collectionModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCollection() {
+    if (!collectionModal.classList.contains('active')) return;
+    collectionModal.classList.remove('active');
+    collectionScroll.innerHTML = '';
+    document.body.style.overflow = '';
+}
+
+document.getElementById('collection-modal-close').addEventListener('click', closeCollection);
+document.getElementById('collection-modal-overlay').addEventListener('click', closeCollection);
+
+// ════════════════════════════════════════════════════════════════
 //  INIT
 // ════════════════════════════════════════════════════════════════
 // The browser's native hash jump fires before the sections above the
@@ -573,7 +727,7 @@ function scrollToHash() {
     if (target) target.scrollIntoView({ behavior: 'instant', block: 'start' });
 }
 
-Promise.all([initArbeid(), initVideo()]).then(() => {
+Promise.all([initArbeid(), initVideo(), initKreativt()]).then(() => {
     // Fade in the freshly-built galleries.
     if (window.registerReveals) window.registerReveals();
 

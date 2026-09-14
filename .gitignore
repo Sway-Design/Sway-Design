@@ -12,3 +12,6 @@ serve.py
 # ── Diverse ──
 .DS_Store
 sway-index.html
+
+# macOS custom-folder icon file
+Icon?

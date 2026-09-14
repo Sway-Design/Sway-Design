@@ -4,13 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="Elementer/Favcon.png">
-    <title>Sway Design — Jonathan Kindingstad</title>
+    <title>Sway Design — Grafisk design i Bergen | Jonathan Kindingstad</title>
+    <meta name="description" content="Sway Design er Jonathan Kindingstads designvirksomhet i Bergen. Plakater, klesdesign, magasiner, motion graphics og video for små bedrifter med stil.">
+    <link rel="canonical" href="https://swaydesign.no/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sway Design">
+    <meta property="og:locale" content="nb_NO">
+    <meta property="og:url" content="https://swaydesign.no/">
+    <meta property="og:title" content="Sway Design — Grafisk design i Bergen">
+    <meta property="og:description" content="Sway Design er Jonathan Kindingstads designvirksomhet i Bergen. Plakater, klesdesign, magasiner, motion graphics og video for små bedrifter med stil.">
+    <meta property="og:image" content="https://swaydesign.no/assets/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=13">
+    <link rel="stylesheet" href="style.css?v=30">
 </head>
 <body>
+
+    <!-- UNDER-CONSTRUCTION TICKER -->
+    <div class="site-ticker" aria-hidden="true">
+        <div class="site-ticker-track">
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+        </div>
+    </div>
 
     <!-- NAVIGATION -->
     <header class="navbar" id="navbar">
@@ -30,7 +60,8 @@
 
     <!-- HERO -->
     <section class="hero" id="hjem">
-        <div class="hero-bg"></div>
+        <canvas class="hero-bg" id="heroGradient"></canvas>
+        <div class="hero-overlay" aria-hidden="true"></div>
         <div class="hero-inner">
             <div class="hero-content">
                 <img src="assets/sd-logo.png" alt="Sway Design" class="hero-logo">
@@ -58,7 +89,7 @@
                 <a href="arbeid.html#video-design" class="work-card">
                     <img src="assets/folder-2-new.png" alt="Videoredigering">
                 </a>
-                <a href="arbeid.html" class="work-card">
+                <a href="arbeid.html#kreativt-arbeid" class="work-card">
                     <img src="assets/folder-3-new.png" alt="Kreativt Arbeid">
                 </a>
             </div>
@@ -89,16 +120,9 @@
                 <div class="kontakt-left">
                     <span class="section-label amber">KONTAKT</span>
                     <h2 class="kontakt-heading">La oss snakke om ideen <em>din</em></h2>
-                    <p class="kontakt-desc">Sway Design jobber for å skape langvarige samarbeid. Viktig å få frem ditt uttrykk, bli kjent med virksomheten.</p>
+                    <p class="kontakt-desc">Sway Design jobber for å skape langvarige samarbeid. Derfor ønsker jeg å bli bedre kjent med deg og bedriften din, for å kunne fremme ditt uttrykk og oppnå dine mål.</p>
 
                     <div class="contact-info">
-                        <a href="mailto:jonathan.kindingstad@gmail.com" class="contact-item">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                                <path d="m22 7-10 7L2 7"/>
-                            </svg>
-                            jonathan.kindingstad@gmail.com
-                        </a>
                         <div class="contact-item">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
@@ -143,7 +167,7 @@
     <footer class="footer">
         <div class="container footer-inner">
             <p class="footer-credit">Designed by Jonathan Kindingstad, built by Claude</p>
-            <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="footer-ig" aria-label="Instagram">
+            <a href="https://www.instagram.com/sway_design/" target="_blank" rel="noopener" class="footer-ig" aria-label="Instagram">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
@@ -153,6 +177,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=13"></script>
+    <script src="script.js?v=31"></script>
 </body>
 </html>

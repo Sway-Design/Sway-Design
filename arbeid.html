@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=30">
+    <link rel="stylesheet" href="style.css?v=38">
 </head>
 <body>
 
@@ -92,10 +92,30 @@
     <div class="collection-modal" id="collection-modal" aria-hidden="true">
         <div class="collection-modal-overlay" id="collection-modal-overlay"></div>
         <div class="collection-modal-header">
-            <span class="collection-modal-title" id="collection-modal-title"></span>
             <button class="collection-modal-close" id="collection-modal-close" aria-label="Lukk">✕</button>
         </div>
-        <div class="collection-modal-scroll" id="collection-modal-scroll"></div>
+        <div class="flipbook-wrap">
+            <div class="flipbook" id="flipbook" tabindex="0" role="group" aria-roledescription="bok" aria-label="Magasin — bruk piltastene for å bla">
+                <button class="flipbook-nav flipbook-prev" id="flipbook-prev" aria-label="Forrige side">
+                    <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M7.5 2L2.5 6L7.5 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="flipbook-stage" id="flipbook-stage">
+                    <div class="flipbook-page flipbook-page--left"><img id="fb-left-img" alt="" draggable="false"></div>
+                    <div class="flipbook-page flipbook-page--right"><img id="fb-right-img" alt="" draggable="false"></div>
+                    <div class="flipbook-leaf" id="fb-leaf">
+                        <div class="flipbook-leaf-face"><img id="fb-leaf-front" alt="" draggable="false"></div>
+                        <div class="flipbook-leaf-face flipbook-leaf-back"><img id="fb-leaf-back" alt="" draggable="false"></div>
+                    </div>
+                </div>
+                <button class="flipbook-nav flipbook-next" id="flipbook-next" aria-label="Neste side">
+                    <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M4.5 2L9.5 6L4.5 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+            </div>
+            <div class="flipbook-footer">
+                <span class="flipbook-counter" id="flipbook-counter"></span>
+                <p class="flipbook-credit">Fotografi og bilder hentet fra nettet. Idé, konsept og utseende satt sammen av meg</p>
+            </div>
+        </div>
     </div>
 
     <!-- VIDEO MODAL -->
@@ -181,7 +201,7 @@
         </div>
     </footer>
 
-<script src="script.js?v=31"></script>
+<script src="script.js?v=36"></script>
 <script>
 // ════════════════════════════════════════════════════════════════
 //  GRAFISK DESIGN
@@ -206,7 +226,7 @@ async function initArbeid() {
         if (Object.keys(data).length === 0) throw new Error('empty');
     } catch {
         try {
-            const res = await fetch('arbeid-manifest.json');
+            const res = await fetch('arbeid-manifest.json?v=3');
             if (!res.ok) throw new Error(res.status);
             data = await res.json();
             imgBase = 'arbeid-files';
@@ -255,7 +275,7 @@ async function initVideo() {
         if (Object.keys(data).length === 0) throw new Error('empty');
     } catch {
         try {
-            const res = await fetch('video-manifest.json');
+            const res = await fetch('video-manifest.json?v=3');
             if (!res.ok) throw new Error(res.status);
             data = await res.json();
             videoBase = 'video-files';
@@ -286,7 +306,7 @@ async function initVideo() {
 // ════════════════════════════════════════════════════════════════
 
 const KREATIVT_SECTION_ORDER = [
-    { folder: 'Her Loss Magasin', displayName: 'Magasiner', type: 'collection', coverIndex: 1 },
+    { folder: 'Her Loss Magasin', displayName: 'Magasiner', type: 'collection', coverFile: 'cover.jpg' },
     { folder: 'Malerier',         displayName: 'Malerier',           type: 'poster'     },
 ];
 
@@ -303,7 +323,7 @@ async function initKreativt() {
         if (Object.keys(data).length === 0) throw new Error('empty');
     } catch {
         try {
-            const res = await fetch('arbeid-manifest.json');
+            const res = await fetch('arbeid-manifest.json?v=3');
             if (!res.ok) throw new Error(res.status);
             data = await res.json();
             kreativtBase = 'arbeid-files';
@@ -345,7 +365,7 @@ function buildSection(config, files, num, base) {
     if (config.type === 'clothing') {
         container.appendChild(buildClothingGrid(config.folder, files, base));
     } else if (config.type === 'collection') {
-        container.appendChild(buildCollectionCover(config.folder, config.displayName, files, base, config.coverIndex ?? 0));
+        container.appendChild(buildCollectionCover(config.folder, config.displayName, files, base, config.coverFile));
     } else {
         container.appendChild(buildPosterGrid(config.folder, files, base));
     }
@@ -424,7 +444,7 @@ function buildClothingGrid(folder, files, base) {
     return grid;
 }
 
-function buildCollectionCover(folder, displayName, files, base, coverIndex = 0) {
+function buildCollectionCover(folder, displayName, files, base, coverFile) {
     const grid = document.createElement('div');
     grid.className = 'collection-grid';
 
@@ -432,18 +452,11 @@ function buildCollectionCover(folder, displayName, files, base, coverIndex = 0) 
     card.className = 'collection-cover';
 
     const img = document.createElement('img');
-    img.src     = `${base}/${encodeURIComponent(folder)}/${encodeURIComponent(files[coverIndex])}`;
+    img.src     = `${base}/${encodeURIComponent(folder)}/${encodeURIComponent(coverFile || files[0])}`;
     img.alt     = displayName;
     img.loading = 'lazy';
 
-    const overlay = document.createElement('div');
-    overlay.className = 'collection-cover-overlay';
-    overlay.innerHTML = `
-        <span class="collection-cover-credit">Fotografi og bilder hentet fra nettet. Idé, konsept og utseende satt sammen av meg</span>
-    `;
-
     card.appendChild(img);
-    card.appendChild(overlay);
     card.addEventListener('click', () => openCollection(folder, displayName, files, base));
     grid.appendChild(card);
 
@@ -677,35 +690,146 @@ document.getElementById('img-lightbox-close').addEventListener('click', closeLig
 document.getElementById('img-lightbox-overlay').addEventListener('click', closeLightbox);
 
 // ════════════════════════════════════════════════════════════════
-//  COLLECTION MODAL (scrollable multi-image gallery)
+//  COLLECTION MODAL — page-flipping magazine
 // ════════════════════════════════════════════════════════════════
+// Always a two-page spread. A "view" is one spread: view 0 is the cover alone,
+// view n is pages 2n-1 / 2n, and a final odd page ends up alone on the left.
+// Turning animates one leaf in 3D; the pages underneath are already set to
+// the destination view, so the leaf simply uncovers them.
 
-const collectionModal  = document.getElementById('collection-modal');
-const collectionScroll = document.getElementById('collection-modal-scroll');
-const collectionTitle  = document.getElementById('collection-modal-title');
+const collectionModal = document.getElementById('collection-modal');
+const fbRoot     = document.getElementById('flipbook');
+const fbStage    = document.getElementById('flipbook-stage');
+const fbLeaf     = document.getElementById('fb-leaf');
+const fbLeftImg  = document.getElementById('fb-left-img');
+const fbRightImg = document.getElementById('fb-right-img');
+const fbFrontImg = document.getElementById('fb-leaf-front');
+const fbBackImg  = document.getElementById('fb-leaf-back');
+const fbCounter  = document.getElementById('flipbook-counter');
+const fbPrevBtn  = document.getElementById('flipbook-prev');
+const fbNextBtn  = document.getElementById('flipbook-next');
+
+const FLIP_MS = 620;
+const fbReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let fbPages = [], fbBase = '', fbFolder = '', fbName = '';
+let fbView = 0, fbAnimating = false;
+
+const fbUrl   = i => `${fbBase}/${encodeURIComponent(fbFolder)}/${encodeURIComponent(fbPages[i])}`;
+const fbLeft  = v => v === 0 ? -1 : 2 * v - 1;
+const fbRight = v => v === 0 ? 0 : 2 * v;
+const fbMaxView = () => Math.ceil((fbPages.length - 1) / 2);
+
+function fbSetImg(img, index) {
+    if (index >= 0 && index < fbPages.length) {
+        img.src = fbUrl(index);
+        img.alt = `${fbName} side ${index + 1}`;
+        img.style.visibility = 'visible';
+    } else {
+        img.removeAttribute('src');
+        img.style.visibility = 'hidden';
+    }
+}
+
+function fbPreload(view) {
+    [fbLeft(view - 1), fbRight(view - 1), fbLeft(view), fbRight(view), fbLeft(view + 1), fbRight(view + 1)]
+        .filter(i => i >= 0 && i < fbPages.length)
+        .forEach(i => { const im = new Image(); im.src = fbUrl(i); });
+}
+
+function fbRender() {
+    fbView = Math.max(0, Math.min(fbView, fbMaxView()));
+    fbSetImg(fbLeftImg, fbLeft(fbView));
+    fbSetImg(fbRightImg, fbRight(fbView));
+    const shown = [fbLeft(fbView), fbRight(fbView)].filter(i => i >= 0 && i < fbPages.length).map(i => i + 1);
+    fbCounter.textContent = shown.length
+        ? `Side ${shown.join('–')} av ${fbPages.length}`
+        : '';
+    fbPrevBtn.disabled = fbView === 0;
+    fbNextBtn.disabled = fbView >= fbMaxView();
+    fbPreload(fbView);
+}
+
+// side: which half the leaf sits on ('right' turns forward, 'left' turns back)
+function fbFlip({ side, fromDeg, toDeg, frontIdx, backIdx, underLeft, underRight, nextView }) {
+    if (fbAnimating) return;
+    fbSetImg(fbLeftImg, underLeft);
+    fbSetImg(fbRightImg, underRight);
+
+    if (fbReducedMotion) { fbView = nextView; fbRender(); return; }
+
+    fbAnimating = true;
+    fbSetImg(fbFrontImg, frontIdx);
+    fbSetImg(fbBackImg, backIdx);
+    fbLeaf.classList.toggle('flipbook-leaf--left', side === 'left');
+    fbLeaf.style.transition = 'none';
+    fbLeaf.style.transform  = `rotateY(${fromDeg}deg)`;
+    fbLeaf.style.visibility = 'visible';
+    void fbLeaf.offsetWidth;                 // commit the start position
+    fbLeaf.style.transition = '';
+    fbLeaf.style.transform  = `rotateY(${toDeg}deg)`;
+
+    setTimeout(() => {
+        fbLeaf.style.visibility = 'hidden';
+        fbAnimating = false;
+        fbView = nextView;
+        fbRender();
+    }, FLIP_MS);
+}
+
+function fbNext() {
+    if (fbAnimating || fbView >= fbMaxView()) return;
+    const to = fbView + 1;
+    fbFlip({
+        side: 'right', fromDeg: 0, toDeg: -180,
+        frontIdx: fbRight(fbView),
+        backIdx: fbLeft(to),
+        underLeft: fbLeft(fbView),
+        underRight: fbRight(to),
+        nextView: to,
+    });
+}
+
+function fbPrev() {
+    if (fbAnimating || fbView === 0) return;
+    const to = fbView - 1;
+    fbFlip({
+        side: 'left', fromDeg: 0, toDeg: 180,
+        frontIdx: fbLeft(fbView), backIdx: fbRight(to),
+        underLeft: fbLeft(to), underRight: fbRight(fbView), nextView: to,
+    });
+}
 
 function openCollection(folder, displayName, files, base) {
-    collectionTitle.textContent = displayName;
-    collectionScroll.innerHTML = '';
-    files.forEach((filename, i) => {
-        const img = document.createElement('img');
-        img.src     = `${base}/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}`;
-        img.alt     = `${displayName} ${i + 1}`;
-        img.loading = i < 2 ? 'eager' : 'lazy';
-        collectionScroll.appendChild(img);
-    });
-    collectionScroll.scrollTop = 0;
+    fbPages = files; fbBase = base; fbFolder = folder; fbName = displayName;
+    fbView = 0;
+    fbLeaf.style.visibility = 'hidden';
+    fbAnimating = false;
+    fbRender();
     collectionModal.classList.add('active');
     document.body.style.overflow = 'hidden';
+    fbRoot.focus({ preventScroll: true });
 }
 
 function closeCollection() {
     if (!collectionModal.classList.contains('active')) return;
     collectionModal.classList.remove('active');
-    collectionScroll.innerHTML = '';
     document.body.style.overflow = '';
 }
 
+const collectionOpen = () => collectionModal.classList.contains('active');
+
+fbNextBtn.addEventListener('click', fbNext);
+fbPrevBtn.addEventListener('click', fbPrev);
+fbStage.addEventListener('click', e => {
+    const rect = fbStage.getBoundingClientRect();
+    (e.clientX - rect.left > rect.width / 2) ? fbNext() : fbPrev();
+});
+document.addEventListener('keydown', e => {
+    if (!collectionOpen()) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); fbNext(); }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); fbPrev(); }
+});
 document.getElementById('collection-modal-close').addEventListener('click', closeCollection);
 document.getElementById('collection-modal-overlay').addEventListener('click', closeCollection);
 

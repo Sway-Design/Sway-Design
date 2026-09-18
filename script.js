@@ -238,7 +238,7 @@ window.addEventListener('DOMContentLoaded', () => {
 // The visitor just fills in the form and clicks Send — no mail app opens.
 // NB: the FIRST time the form is submitted, FormSubmit e-mails Jonathan a
 // one-time activation link that must be clicked once. After that it works.
-const CONTACT_ENDPOINT = 'https://formsubmit.co/ajax/jonathan.kindingstad@gmail.com';
+const CONTACT_ENDPOINT = 'https://formsubmit.co/ajax/kontakt@swaydesign.no';
 const form      = document.getElementById('contactForm');
 const submitBtn = document.getElementById('submitBtn');
 

@@ -1,1 +1,10 @@
-{"Motion Graphics": ["Promo video (30fps)-kopi.mp4", "Tidlig test.mp4", "Logo 80s showoff-kopi.mp4"], "Videoredigering": ["Balestrand open - Sinners edit-kopi.mp4"]}
+{
+ "Motion Graphics": [
+  "logo-80s-showoff.mp4",
+  "promo-video.mp4",
+  "tidlig-test.mp4"
+ ],
+ "Videoredigering": [
+  "balestrand-open-sinners-edit.mp4"
+ ]
+}

@@ -20,7 +20,46 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=44">
+    <link rel="stylesheet" href="style.css?v=45">
+
+    <!-- Business details for search engines. This is what lets Google show
+         Sway Design as a Bergen design business rather than just a web page. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "@id": "https://swaydesign.no/#sway-design",
+      "name": "Sway Design",
+      "alternateName": "Sway Design — Jonathan Kindingstad",
+      "description": "Designvirksomhet i Bergen: plakater, klesdesign, magasiner, motion graphics og videoredigering for små bedrifter.",
+      "url": "https://swaydesign.no/",
+      "image": "https://swaydesign.no/assets/og-image.jpg",
+      "logo": "https://swaydesign.no/assets/sd-logo.png",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Bergen",
+        "addressCountry": "NO"
+      },
+      "areaServed": { "@type": "Country", "name": "Norge" },
+      "founder": { "@type": "Person", "name": "Jonathan Kindingstad" },
+      "sameAs": ["https://www.instagram.com/sway_design/"],
+      "knowsAbout": [
+        "Grafisk design", "Plakatdesign", "Klesdesign", "Magasindesign",
+        "Motion graphics", "Videoredigering"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Tjenester",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Plakatdesign" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Klesdesign" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Magasindesign" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Motion graphics" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Videoredigering" } }
+        ]
+      }
+    }
+    </script>
 </head>
 <body>
 
@@ -63,6 +102,9 @@
         <div class="hero-bg"></div>
         <div class="hero-inner">
             <div class="hero-content">
+                <!-- The visible title is the logo image; this gives the page a
+                     real heading for screen readers and search engines. -->
+                <h1 class="visually-hidden">Sway Design — grafisk design, video og klesdesign i Bergen</h1>
                 <img src="assets/sd-logo.png" alt="Sway Design" class="hero-logo">
                 <p class="hero-sub">Designarbeid for små bedrifter med stil</p>
                 <a href="#arbeid" class="btn-outline">
@@ -105,7 +147,7 @@
                 </div>
                 <div class="produkter-copy">
                     <h2 class="produkter-heading">Produkter som fremmer <em>ditt</em> uttrykk</h2>
-                    <p class="produkter-desc">I Sway Design fokuserer vi på å produsere arbeid som skaffer resultatene dere er på utkikk etter</p>
+                    <p class="produkter-desc">I Sway Design lager jeg arbeid som gir deg resultatene du er ute etter</p>
                 </div>
             </div>
         </div>
@@ -140,11 +182,11 @@
                     <form class="contact-form" id="contactForm">
                         <div class="form-field">
                             <label for="f-name">Navn</label>
-                            <input type="text" id="f-name" name="name" autocomplete="name">
+                            <input type="text" id="f-name" name="name" autocomplete="name" required>
                         </div>
                         <div class="form-field">
                             <label for="f-email">E-post</label>
-                            <input type="email" id="f-email" name="email" autocomplete="email">
+                            <input type="email" id="f-email" name="email" autocomplete="email" required>
                         </div>
                         <div class="form-field">
                             <label for="f-company">Bedrift</label>
@@ -152,7 +194,7 @@
                         </div>
                         <div class="form-field">
                             <label for="f-message">Melding</label>
-                            <textarea id="f-message" name="message" rows="5"></textarea>
+                            <textarea id="f-message" name="message" rows="5" required></textarea>
                         </div>
                         <button type="submit" class="btn-submit" id="submitBtn">Send</button>
                     </form>
@@ -175,6 +217,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=39"></script>
+    <script src="script.js?v=40"></script>
 </body>
 </html>

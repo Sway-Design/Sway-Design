@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=44">
+    <link rel="stylesheet" href="style.css?v=45">
 </head>
 <body>
 
@@ -58,10 +58,14 @@
         </div>
     </header>
 
+    <!-- One heading for the page itself (screen readers + search engines);
+         the three banners below are section headings, not page titles. -->
+    <h1 class="visually-hidden">Arbeid — plakater, klesdesign, video og magasiner</h1>
+
     <!-- GRAFISK DESIGN header -->
     <div class="arbeid-page-header">
         <div class="container">
-            <h1 class="arbeid-page-title">GRAFISK DESIGN</h1>
+            <h2 class="arbeid-page-title">GRAFISK DESIGN</h2>
         </div>
     </div>
 
@@ -71,7 +75,7 @@
     <!-- VIDEO DESIGN header -->
     <div id="video-design" class="arbeid-page-header video-page-header">
         <div class="container">
-            <h1 class="arbeid-page-title">VIDEO DESIGN</h1>
+            <h2 class="arbeid-page-title">VIDEO DESIGN</h2>
         </div>
     </div>
 
@@ -81,7 +85,7 @@
     <!-- KREATIVT ARBEID header -->
     <div id="kreativt-arbeid" class="arbeid-page-header video-page-header">
         <div class="container">
-            <h1 class="arbeid-page-title">KREATIVT ARBEID</h1>
+            <h2 class="arbeid-page-title">KREATIVT ARBEID</h2>
         </div>
     </div>
 
@@ -201,7 +205,7 @@
         </div>
     </footer>
 
-<script src="script.js?v=39"></script>
+<script src="script.js?v=40"></script>
 <script>
 // ════════════════════════════════════════════════════════════════
 //  GRAFISK DESIGN
@@ -212,28 +216,18 @@ const SECTION_ORDER = [
     { folder: 'Kles design',   displayName: 'Klesdesign',   type: 'clothing' },
 ];
 
-let imgBase = '/arbeid-image';
+const imgBase = 'arbeid-files';
 
 async function initArbeid() {
     const main = document.getElementById('arbeid-main');
     let data;
     try {
-        const res = await fetch('/api/arbeid');
-        if (res.ok && res.headers.get('Content-Type')?.includes('json')) {
-            data = await res.json();
-        } else throw new Error('not json');
-        // Empty response = sandbox blocked the server; fall back to manifest
-        if (Object.keys(data).length === 0) throw new Error('empty');
+        const res = await fetch('arbeid-manifest.json?v=4');
+        if (!res.ok) throw new Error(res.status);
+        data = await res.json();
     } catch {
-        try {
-            const res = await fetch('arbeid-manifest.json?v=3');
-            if (!res.ok) throw new Error(res.status);
-            data = await res.json();
-            imgBase = 'arbeid-files';
-        } catch {
-            main.innerHTML = '<p style="color:#888;text-align:center;padding:80px 24px">Kunne ikke laste bilder.</p>';
-            return;
-        }
+        main.innerHTML = '<p style="color:#888;text-align:center;padding:80px 24px">Kunne ikke laste bilder.</p>';
+        return;
     }
 
     const kreativtFolders = KREATIVT_SECTION_ORDER.flatMap(s => s.items ? s.items.map(i => i.folder) : [s.folder]);
@@ -262,28 +256,18 @@ const VIDEO_SECTION_ORDER = [
     { folder: 'Videoredigering',  displayName: 'Videoredigering'  },
 ];
 
-let videoBase = '/video-file';
+const videoBase = 'video-files';
 
 async function initVideo() {
     const main = document.getElementById('video-main');
     let data;
     try {
-        const res = await fetch('/api/video');
-        if (res.ok && res.headers.get('Content-Type')?.includes('json')) {
-            data = await res.json();
-        } else throw new Error('not json');
-        // Empty response = sandbox blocked the server; fall back to manifest
-        if (Object.keys(data).length === 0) throw new Error('empty');
+        const res = await fetch('video-manifest.json?v=4');
+        if (!res.ok) throw new Error(res.status);
+        data = await res.json();
     } catch {
-        try {
-            const res = await fetch('video-manifest.json?v=3');
-            if (!res.ok) throw new Error(res.status);
-            data = await res.json();
-            videoBase = 'video-files';
-        } catch {
-            main.innerHTML = '<p style="color:#888;text-align:center;padding:80px 24px">Ingen videoer ennå.</p>';
-            return;
-        }
+        main.innerHTML = '<p style="color:#888;text-align:center;padding:80px 24px">Ingen videoer ennå.</p>';
+        return;
     }
 
     const knownFolders = new Set(VIDEO_SECTION_ORDER.map(s => s.folder));
@@ -319,27 +303,18 @@ const KREATIVT_SECTION_ORDER = [
     { folder: 'Malerier', displayName: 'Malerier', type: 'poster' },
 ];
 
-let kreativtBase = '/arbeid-image';
+const kreativtBase = 'arbeid-files';
 
 async function initKreativt() {
     const main = document.getElementById('kreativt-main');
     let data;
     try {
-        const res = await fetch('/api/arbeid');
-        if (res.ok && res.headers.get('Content-Type')?.includes('json')) {
-            data = await res.json();
-        } else throw new Error('not json');
-        if (Object.keys(data).length === 0) throw new Error('empty');
+        const res = await fetch('arbeid-manifest.json?v=4');
+        if (!res.ok) throw new Error(res.status);
+        data = await res.json();
     } catch {
-        try {
-            const res = await fetch('arbeid-manifest.json?v=3');
-            if (!res.ok) throw new Error(res.status);
-            data = await res.json();
-            kreativtBase = 'arbeid-files';
-        } catch {
-            main.innerHTML = '<p style="color:#888;text-align:center;padding:80px 24px">Kunne ikke laste bilder.</p>';
-            return;
-        }
+        main.innerHTML = '<p style="color:#888;text-align:center;padding:80px 24px">Kunne ikke laste bilder.</p>';
+        return;
     }
 
     let num = 0;
@@ -375,7 +350,7 @@ function buildSection(config, files, num, base) {
     container.innerHTML = `
         <div class="arbeid-section-label">
             <span class="arbeid-section-num">${String(num).padStart(2, '0')}</span>
-            <h2 class="arbeid-section-name">${config.displayName}</h2>
+            <h3 class="arbeid-section-name">${config.displayName}</h3>
         </div>
     `;
 
@@ -403,13 +378,66 @@ function buildVideoSection(config, files, num) {
     container.innerHTML = `
         <div class="arbeid-section-label">
             <span class="arbeid-section-num">${String(num).padStart(2, '0')}</span>
-            <h2 class="arbeid-section-name">${config.displayName}</h2>
+            <h3 class="arbeid-section-name">${config.displayName}</h3>
         </div>
     `;
     container.appendChild(buildVideoGrid(config.folder, files));
 
     section.appendChild(container);
     return section;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  TITLES
+// ════════════════════════════════════════════════════════════════
+// Alt text used to be the file name with the dashes swapped for spaces, which
+// read as "AF1 Template kopi" to screen readers and to Google Images. These are
+// the real titles; anything missing falls back to a tidied file name.
+const WORK_TITLES = {
+    'nike-air-force-1-template.jpg':  'Nike Air Force 1 template-plakat',
+    'air-jordan-1-smoke-grey.jpg':    'Air Jordan 1 «Smoke Grey»-plakat',
+    'albumcover-kort.jpg':            'Albumcover satt opp som samlekort',
+    'aphex-twin-turneplakat.jpg':     'Aphex Twin turnéplakat',
+    'bausa-turneplakat.jpg':          'Bausa turnéplakat',
+    'fast-and-furious-plakat.jpg':    'Fast & Furious-plakat',
+    'nike-off-white-blazer-mid.jpg':  'Nike x Off-White «Blazer Mid»-plakat',
+    'on-to-something.jpg':            '«On to something»-plakat',
+    'retro-porsche-plakat.jpg':       'Retro Porsche-plakat',
+    'sway-design-plakat.jpg':         'Sway Design-plakat',
+    'steel-and-style.jpg':            '«Steel & Style»-plakat',
+    'the-weeknd-plakat.jpg':          'The Weeknd-plakat',
+    'the-weeknd-filmplakat.jpg':      'The Weeknd filmplakat',
+
+    'butterfly-bla.jpg':              'Butterfly-design, blå',
+    'butterfly-oransje.jpg':          'Butterfly-design, oransje',
+    'design-generation-iii.jpg':      'Design Generation III',
+    'national-liberty.jpg':           'National Liberty',
+    'varsity-jakke-globe.jpg':        'Varsity-jakke «Globe»',
+    'varsity-jakke-spades.jpg':       'Varsity-jakke «Spades»',
+
+    'Golf.jpg':                       'Maleri: golf',
+    'Racerbil.jpg':                   'Maleri: racerbil',
+    'Surfing.jpg':                    'Maleri: surfing',
+    'Skitur.jpg':                     'Maleri: skitur',
+
+    'promo-video.mp4':                'Promovideo',
+    'tidlig-test.mp4':                'Motion graphics — tidlig test',
+    'logo-80s-showoff.mp4':           'Logoanimasjon i 80-tallsstil',
+    'balestrand-open-sinners-edit.mp4': 'Balestrand Open — Sinners edit',
+};
+
+const workTitle = (filename) =>
+    WORK_TITLES[filename] || filename.replace(/[-_]/g, ' ').replace(/\.[^.]+$/, '');
+
+// Cards are <div>s, so they need the keyboard behaviour a button gets for free.
+function makeActivatable(card, label, activate) {
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', label);
+    card.addEventListener('click', activate);
+    card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
+    });
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -425,10 +453,10 @@ function buildPosterGrid(folder, files, base) {
         card.className = 'poster-card';
         const img = document.createElement('img');
         img.src     = `${base}/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}`;
-        img.alt     = filename.replace(/[-_]/g, ' ').replace(/\.[^.]+$/, '');
+        img.alt     = workTitle(filename);
         img.loading = 'lazy';
         card.appendChild(img);
-        card.addEventListener('click', () => openLightbox(img.src, img.alt));
+        makeActivatable(card, img.alt, () => openLightbox(img.src, img.alt));
         grid.appendChild(card);
     });
 
@@ -452,10 +480,10 @@ function buildClothingGrid(folder, files, base) {
         card.className = 'clothing-card';
         const img = document.createElement('img');
         img.src     = `${base}/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}`;
-        img.alt     = filename.replace(/[-_]/g, ' ').replace(/\.[^.]+$/, '');
+        img.alt     = workTitle(filename);
         img.loading = 'lazy';
         card.appendChild(img);
-        card.addEventListener('click', () => openLightbox(img.src, img.alt));
+        makeActivatable(card, img.alt, () => openLightbox(img.src, img.alt));
         grid.appendChild(card);
     });
 
@@ -478,7 +506,7 @@ function buildCollectionCovers(items, base) {
         img.loading = 'lazy';
 
         card.appendChild(img);
-        card.addEventListener('click', () => openCollection(folder, name, files, base));
+        makeActivatable(card, `${name} — åpne magasinet`, () => openCollection(folder, name, files, base));
         grid.appendChild(card);
     });
 
@@ -517,7 +545,7 @@ function buildVideoGrid(folder, files) {
         card.appendChild(overlay);
 
         const src = `${videoBase}/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}`;
-        card.addEventListener('click', () => openVideoModal(src));
+        makeActivatable(card, `${workTitle(filename)} — spill av`, () => openVideoModal(src));
 
         grid.appendChild(card);
     });
@@ -536,7 +564,7 @@ const player      = document.getElementById('video-modal-player');
 // Credit lines under the player, keyed by file name — same idea as the
 // magazine's credit. Built in JS so the player markup stays untouched.
 const VIDEO_CREDITS = {
-    'Balestrand open - Sinners edit-kopi.mp4': 'Video materiale fra Tobias Sjåfjell, konsept og videoredigering av meg',
+    'balestrand-open-sinners-edit.mp4': 'Video materiale fra Tobias Sjåfjell, konsept og videoredigering av meg',
 };
 const videoCredit = document.createElement('p');
 videoCredit.className = 'video-modal-credit';
@@ -652,6 +680,7 @@ function openVideoModal(src) {
     videoCredit.textContent = credit;
     videoCredit.style.display = credit ? '' : 'none';
     modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');   // screen readers ignore aria-hidden content
     document.body.style.overflow = 'hidden';
     progress.value = 0;
     timeEl.textContent = '0:00 / 0:00';
@@ -664,6 +693,7 @@ function closeVideoModal() {
     player.pause();
     player.src = '';
     modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
 }
 
@@ -699,12 +729,14 @@ function openLightbox(src, alt) {
     lightboxImg.style.transformOrigin = '50% 50%';
     setLightboxZoom(1);
     lightbox.classList.add('active');
+    lightbox.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 }
 
 function closeLightbox() {
     if (!lightbox.classList.contains('active')) return;
     lightbox.classList.remove('active');
+    lightbox.setAttribute('aria-hidden', 'true');
     lightboxImg.src = '';
     document.body.style.overflow = '';
 }
@@ -861,6 +893,7 @@ function openCollection(folder, displayName, files, base) {
     };
     probe.src = fbUrl(Math.min(1, fbPages.length - 1));
     collectionModal.classList.add('active');
+    collectionModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     fbRoot.focus({ preventScroll: true });
 }
@@ -868,6 +901,7 @@ function openCollection(folder, displayName, files, base) {
 function closeCollection() {
     if (!collectionModal.classList.contains('active')) return;
     collectionModal.classList.remove('active');
+    collectionModal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
 }
 

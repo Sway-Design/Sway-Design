@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <link rel="icon" type="image/png" href="Elementer/Favcon.png">
+    <title>Siden finnes ikke — Sway Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=45">
+    <style>
+        .nf-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .nf-code {
+            font-family: var(--font-display);
+            font-size: clamp(90px, 18vw, 180px);
+            line-height: 0.9;
+            color: var(--white);
+            letter-spacing: 0.02em;
+        }
+
+        .nf-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.78);
+            max-width: 420px;
+        }
+
+        .nf-text em {
+            font-family: var(--font-serif);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <main class="nf-page">
+        <img src="assets/sd-logo.png" alt="Sway Design" style="width:150px;height:auto">
+        <p class="nf-code">404</p>
+        <p class="nf-text">Denne siden finnes ikke — den kan ha blitt flyttet eller <em>aldri ha eksistert</em>.</p>
+        <a href="/" class="btn-outline">TILBAKE TIL FORSIDEN
+            <svg class="btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+            </svg>
+        </a>
+    </main>
+</body>
+</html>

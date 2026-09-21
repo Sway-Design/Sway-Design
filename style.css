@@ -288,6 +288,23 @@ a {
     padding-bottom: 90px;
 }
 
+/* Phones: shorten the hero so the rounded top edge of the panel below peeks
+   above the fold instead of sitting exactly on it. */
+@media (max-width: 700px) {
+    .hero {
+        min-height: calc(100vh - 14px);
+    }
+}
+
+/* svh accounts for the browser's own toolbars, so the peek survives them. */
+@supports (height: 100svh) {
+    @media (max-width: 700px) {
+        .hero {
+            min-height: calc(100svh - 14px);
+        }
+    }
+}
+
 .hero-bg {
     position: absolute;
     top: -400px;
@@ -962,7 +979,7 @@ a {
 .flipbook-leaf-face img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     display: block;
 }
 
@@ -977,11 +994,16 @@ a {
 }
 
 .flipbook-page--left::after {
-    background: linear-gradient(270deg, rgba(0, 0, 0, 0.38) 0px, rgba(0, 0, 0, 0) 58px);
+    background: linear-gradient(270deg, rgba(0, 0, 0, 0.35) 0px, rgba(0, 0, 0, 0) 58px);
 }
 
 .flipbook-page--right::after {
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.38) 0px, rgba(0, 0, 0, 0) 58px);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.35) 0px, rgba(0, 0, 0, 0) 58px);
+}
+
+/* The cover and the back page stand alone — no spine, so no shadow. */
+.flipbook-stage--single .flipbook-page::after {
+    display: none;
 }
 
 .flipbook-leaf {
@@ -993,7 +1015,10 @@ a {
     transform-style: preserve-3d;
     transform-origin: left center;
     transition: transform 0.62s cubic-bezier(0.45, 0.05, 0.3, 1);
-    visibility: hidden;
+    /* display, not visibility: the face images carry an inline
+       visibility:visible, which would override a hidden parent and leave the
+       turned leaf lying on top of a page (hiding its spine shadow). */
+    display: none;
     z-index: 3;
 }
 
@@ -1011,6 +1036,39 @@ a {
 }
 
 .flipbook-leaf-back { transform: rotateY(180deg); }
+
+/* The turning page carries the same spine shadow. The leaf pivots on the edge
+   that sits at the spine, so the gradient points at that edge — and the back
+   face is mirrored (rotateY(180deg)), so its gradient runs the opposite way. */
+.flipbook-leaf-face::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.flipbook-leaf-front::after {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.35) 0px, rgba(0, 0, 0, 0) 58px);
+}
+
+.flipbook-leaf-back::after {
+    background: linear-gradient(270deg, rgba(0, 0, 0, 0.35) 0px, rgba(0, 0, 0, 0) 58px);
+}
+
+/* A turning face showing the cover or the back page gets no shadow. */
+.flipbook-leaf--front-plain .flipbook-leaf-front::after,
+.flipbook-leaf--back-plain .flipbook-leaf-back::after {
+    display: none;
+}
+
+/* Turning backwards the leaf sits on the left half, pivoting on its right edge. */
+.flipbook-leaf--left .flipbook-leaf-front::after {
+    background: linear-gradient(270deg, rgba(0, 0, 0, 0.35) 0px, rgba(0, 0, 0, 0) 58px);
+}
+
+.flipbook-leaf--left .flipbook-leaf-back::after {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.35) 0px, rgba(0, 0, 0, 0) 58px);
+}
 
 .flipbook-nav {
     flex: 0 0 auto;
@@ -1204,6 +1262,14 @@ a {
 
 .video-modal-close:hover {
     color: #fff;
+}
+
+.video-modal-credit {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.78);
 }
 
 /* ── Image lightbox ── */
@@ -1615,14 +1681,15 @@ a {
     }
 
     /* 40% smaller than on desktop: every dimension scaled by 0.6, so the
-       proportions are unchanged (letter-spacing is in em and follows along). */
-    .btn-outline {
+       proportions are unchanged (letter-spacing is in em and follows along).
+       Hero only — other buttons keep their full size. */
+    .hero .btn-outline {
         font-size: 10.38px;
         padding: 9px 19.2px;
         gap: 6px;
     }
 
-    .btn-arrow {
+    .hero .btn-arrow {
         width: 10.8px;
         height: 10.8px;
     }

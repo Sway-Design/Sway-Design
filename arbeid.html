@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=38">
+    <link rel="stylesheet" href="style.css?v=41">
 </head>
 <body>
 
@@ -103,7 +103,7 @@
                     <div class="flipbook-page flipbook-page--left"><img id="fb-left-img" alt="" draggable="false"></div>
                     <div class="flipbook-page flipbook-page--right"><img id="fb-right-img" alt="" draggable="false"></div>
                     <div class="flipbook-leaf" id="fb-leaf">
-                        <div class="flipbook-leaf-face"><img id="fb-leaf-front" alt="" draggable="false"></div>
+                        <div class="flipbook-leaf-face flipbook-leaf-front"><img id="fb-leaf-front" alt="" draggable="false"></div>
                         <div class="flipbook-leaf-face flipbook-leaf-back"><img id="fb-leaf-back" alt="" draggable="false"></div>
                     </div>
                 </div>
@@ -201,7 +201,7 @@
         </div>
     </footer>
 
-<script src="script.js?v=38"></script>
+<script src="script.js?v=39"></script>
 <script>
 // ════════════════════════════════════════════════════════════════
 //  GRAFISK DESIGN
@@ -236,7 +236,8 @@ async function initArbeid() {
         }
     }
 
-    const knownFolders = new Set([...SECTION_ORDER, ...KREATIVT_SECTION_ORDER].map(s => s.folder));
+    const kreativtFolders = KREATIVT_SECTION_ORDER.flatMap(s => s.items ? s.items.map(i => i.folder) : [s.folder]);
+    const knownFolders = new Set([...SECTION_ORDER.map(s => s.folder), ...kreativtFolders]);
     const extra = Object.keys(data)
         .filter(f => !knownFolders.has(f))
         .map(f => ({ folder: f, displayName: f, type: 'poster' }));
@@ -306,8 +307,16 @@ async function initVideo() {
 // ════════════════════════════════════════════════════════════════
 
 const KREATIVT_SECTION_ORDER = [
-    { folder: 'Her Loss Magasin', displayName: 'Magasiner', type: 'collection', coverFile: 'cover.jpg' },
-    { folder: 'Malerier',         displayName: 'Malerier',           type: 'poster'     },
+    {
+        displayName: 'Magasiner',
+        type: 'collection',
+        // One section, one cover per magazine.
+        items: [
+            { folder: 'Her Loss Magasin', title: 'Her Loss', coverFile: '00.jpg' },
+            { folder: 'Stylish',          title: 'Stylish',  coverFile: '00.jpg' },
+        ],
+    },
+    { folder: 'Malerier', displayName: 'Malerier', type: 'poster' },
 ];
 
 let kreativtBase = '/arbeid-image';
@@ -335,6 +344,14 @@ async function initKreativt() {
 
     let num = 0;
     for (const cfg of KREATIVT_SECTION_ORDER) {
+        if (cfg.items) {
+            const items = cfg.items
+                .filter(it => data[it.folder]?.length)
+                .map(it => ({ ...it, files: data[it.folder] }));
+            if (!items.length) continue;
+            main.appendChild(buildSection(cfg, items, ++num, kreativtBase));
+            continue;
+        }
         const files = data[cfg.folder];
         if (!files?.length) continue;
         main.appendChild(buildSection(cfg, files, ++num, kreativtBase));
@@ -365,7 +382,9 @@ function buildSection(config, files, num, base) {
     if (config.type === 'clothing') {
         container.appendChild(buildClothingGrid(config.folder, files, base));
     } else if (config.type === 'collection') {
-        container.appendChild(buildCollectionCover(config.folder, config.displayName, files, base, config.coverFile));
+        container.appendChild(buildCollectionCovers(config.items
+            ? files                                                        // [{ folder, title, coverFile, files }]
+            : [{ folder: config.folder, title: config.displayName, coverFile: config.coverFile, files }], base));
     } else {
         container.appendChild(buildPosterGrid(config.folder, files, base));
     }
@@ -444,21 +463,24 @@ function buildClothingGrid(folder, files, base) {
     return grid;
 }
 
-function buildCollectionCover(folder, displayName, files, base, coverFile) {
+function buildCollectionCovers(items, base) {
     const grid = document.createElement('div');
     grid.className = 'collection-grid';
 
-    const card = document.createElement('div');
-    card.className = 'collection-cover';
+    items.forEach(({ folder, title, coverFile, files }) => {
+        const name = title || folder;
+        const card = document.createElement('div');
+        card.className = 'collection-cover';
 
-    const img = document.createElement('img');
-    img.src     = `${base}/${encodeURIComponent(folder)}/${encodeURIComponent(coverFile || files[0])}`;
-    img.alt     = displayName;
-    img.loading = 'lazy';
+        const img = document.createElement('img');
+        img.src     = `${base}/${encodeURIComponent(folder)}/${encodeURIComponent(coverFile || files[0])}`;
+        img.alt     = name;
+        img.loading = 'lazy';
 
-    card.appendChild(img);
-    card.addEventListener('click', () => openCollection(folder, displayName, files, base));
-    grid.appendChild(card);
+        card.appendChild(img);
+        card.addEventListener('click', () => openCollection(folder, name, files, base));
+        grid.appendChild(card);
+    });
 
     return grid;
 }
@@ -510,6 +532,16 @@ function buildVideoGrid(folder, files) {
 
 const modal       = document.getElementById('video-modal');
 const player      = document.getElementById('video-modal-player');
+
+// Credit lines under the player, keyed by file name — same idea as the
+// magazine's credit. Built in JS so the player markup stays untouched.
+const VIDEO_CREDITS = {
+    'Balestrand open - Sinners edit-kopi.mp4': 'Video materiale fra Tobias Sjåfjell, konsept og videoredigering av meg',
+};
+const videoCredit = document.createElement('p');
+videoCredit.className = 'video-modal-credit';
+videoCredit.style.display = 'none';
+document.querySelector('.video-modal-inner').appendChild(videoCredit);
 const progress    = document.getElementById('vc-progress');
 const timeEl      = document.getElementById('vc-time');
 const playPauseBtn = document.getElementById('vc-playpause');
@@ -616,6 +648,9 @@ fsBtn.addEventListener('click', () => {
 
 function openVideoModal(src) {
     player.src = src;
+    const credit = VIDEO_CREDITS[decodeURIComponent(src.split('/').pop())] || '';
+    videoCredit.textContent = credit;
+    videoCredit.style.display = credit ? '' : 'none';
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
     progress.value = 0;
@@ -741,6 +776,9 @@ function fbRender() {
     fbView = Math.max(0, Math.min(fbView, fbMaxView()));
     fbSetImg(fbLeftImg, fbLeft(fbView));
     fbSetImg(fbRightImg, fbRight(fbView));
+    // Cover and back page stand alone: no facing page, so no spine shadow.
+    const singlePage = fbLeft(fbView) < 0 || fbRight(fbView) >= fbPages.length;
+    fbStage.classList.toggle('flipbook-stage--single', singlePage);
     const shown = [fbLeft(fbView), fbRight(fbView)].filter(i => i >= 0 && i < fbPages.length).map(i => i + 1);
     fbCounter.textContent = shown.length
         ? `Side ${shown.join('–')} av ${fbPages.length}`
@@ -755,6 +793,15 @@ function fbFlip({ side, fromDeg, toDeg, frontIdx, backIdx, underLeft, underRight
     if (fbAnimating) return;
     fbSetImg(fbLeftImg, underLeft);
     fbSetImg(fbRightImg, underRight);
+    // Shadows follow the destination, so the page being uncovered is shaded from
+    // the first frame — unless we are turning to the cover or the back page,
+    // which stand alone and carry no shadow at any point in the turn. The same
+    // goes for the leaf face showing such a page.
+    const fromSingle = fbLeft(fbView) < 0 || fbRight(fbView) >= fbPages.length;
+    const toSingle   = fbLeft(nextView) < 0 || fbRight(nextView) >= fbPages.length;
+    fbStage.classList.toggle('flipbook-stage--single', toSingle);
+    fbLeaf.classList.toggle('flipbook-leaf--front-plain', fromSingle);
+    fbLeaf.classList.toggle('flipbook-leaf--back-plain', toSingle);
 
     if (fbReducedMotion) { fbView = nextView; fbRender(); return; }
 
@@ -764,13 +811,13 @@ function fbFlip({ side, fromDeg, toDeg, frontIdx, backIdx, underLeft, underRight
     fbLeaf.classList.toggle('flipbook-leaf--left', side === 'left');
     fbLeaf.style.transition = 'none';
     fbLeaf.style.transform  = `rotateY(${fromDeg}deg)`;
-    fbLeaf.style.visibility = 'visible';
+    fbLeaf.style.display = 'block';
     void fbLeaf.offsetWidth;                 // commit the start position
     fbLeaf.style.transition = '';
     fbLeaf.style.transform  = `rotateY(${toDeg}deg)`;
 
     setTimeout(() => {
-        fbLeaf.style.visibility = 'hidden';
+        fbLeaf.style.display = 'none';
         fbAnimating = false;
         fbView = nextView;
         fbRender();
@@ -803,9 +850,16 @@ function fbPrev() {
 function openCollection(folder, displayName, files, base) {
     fbPages = files; fbBase = base; fbFolder = folder; fbName = displayName;
     fbView = 0;
-    fbLeaf.style.visibility = 'hidden';
+    fbLeaf.style.display = 'none';
     fbAnimating = false;
     fbRender();
+    const probe = new Image();
+    probe.onload = () => {
+        if (probe.naturalWidth && probe.naturalHeight) {
+            fbStage.style.aspectRatio = `${probe.naturalWidth * 2} / ${probe.naturalHeight}`;
+        }
+    };
+    probe.src = fbUrl(Math.min(1, fbPages.length - 1));
     collectionModal.classList.add('active');
     document.body.style.overflow = 'hidden';
     fbRoot.focus({ preventScroll: true });

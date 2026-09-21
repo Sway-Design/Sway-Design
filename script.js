@@ -180,9 +180,8 @@ const REVEAL_SELECTORS = [
     '.produkter-row',
     '.kontakt-card',
     '.arbeid-page-header',
-    '.poster-card',
-    '.clothing-card',
-    '.video-card',
+    // Gallery images and videos are deliberately NOT revealed on scroll: with
+    // this many of them the staggered fade made scrolling feel slow to load.
     '.om-section',
     '.om-right'
 ];

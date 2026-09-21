@@ -473,6 +473,7 @@ a {
     grid-template-columns: repeat(3, 216px);
     gap: 32px;
     justify-content: center;
+    align-items: start;
 }
 
 .work-card {
@@ -489,9 +490,16 @@ a {
     box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
 }
 
+/* The folder artwork all shares one canvas (333x325, content bottom-aligned),
+   so the row lines up exactly. The fixed aspect-ratio + contain is the safety
+   net: if a folder image is ever replaced by one with a different shape, the
+   cards keep identical heights instead of the row going crooked again. */
 .work-card img {
     width: 100%;
     height: auto;
+    aspect-ratio: 333 / 325;
+    object-fit: contain;
+    object-position: center bottom;
     display: block;
 }
 
@@ -1680,18 +1688,18 @@ a {
         display: flex;
     }
 
-    /* 40% smaller than on desktop: every dimension scaled by 0.6, so the
+    /* 20% smaller than on desktop: every dimension scaled by 0.8, so the
        proportions are unchanged (letter-spacing is in em and follows along).
        Hero only — other buttons keep their full size. */
     .hero .btn-outline {
-        font-size: 10.38px;
-        padding: 9px 19.2px;
-        gap: 6px;
+        font-size: 13.84px;
+        padding: 12px 25.6px;
+        gap: 8px;
     }
 
     .hero .btn-arrow {
-        width: 10.8px;
-        height: 10.8px;
+        width: 14.4px;
+        height: 14.4px;
     }
 
     /* Hjem reappears inside the hamburger menu */

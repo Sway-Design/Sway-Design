@@ -33,22 +33,6 @@ html {
     scroll-padding-top: 56px;
 }
 
-/* ── Keyboard focus ─────────────────────────────────────────────────────────
-   Anything interactive gets a clear ring when it is reached by keyboard.
-   :focus-visible means a mouse click never shows it, so the design is
-   untouched for pointer users while the site stays navigable without one. */
-:focus-visible {
-    outline: 2px solid var(--amber);
-    outline-offset: 3px;
-    border-radius: 4px;
-}
-
-.form-field input:focus-visible,
-.form-field textarea:focus-visible {
-    outline: 2px solid var(--amber);
-    outline-offset: 1px;
-    border-color: transparent;
-}
 
 /* Present for screen readers and search engines, invisible on screen. */
 .visually-hidden {
@@ -609,7 +593,7 @@ a {
 }
 
 .produkter-desc {
-    font-size: 14.5px;
+    font-size: 14px;
     color: rgba(255, 255, 255, 0.78);
     line-height: 1.75;
     max-width: 360px;
@@ -666,11 +650,12 @@ a {
 }
 
 .kontakt-desc {
-    font-size: 13.5px;
+    font-size: 14px;
     color: rgba(255, 255, 255, 0.78);
-    line-height: 1.72;
+    line-height: 1.75;
     margin-bottom: 32px;
-    max-width: 290px;
+    max-width: 320px;   /* a little wider so the slightly larger text still
+                           gets a comfortable line length */
 }
 
 .contact-info {

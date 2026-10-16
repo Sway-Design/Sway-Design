@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="Elementer/Favcon.png">
+    <title>Prosjekt — Sway Design</title>
+    <meta name="description" content="Prosjekt fra porteføljen til Sway Design, designvirksomheten til Jonathan Kindingstad i Bergen.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=55">
+    <style>
+        /* ── Project view ──────────────────────────────────────────────
+           Text column on the left stays put while the work scrolls past
+           on the right; the media stack is flush, rounded as one block. */
+        .pv-page {
+            padding: 112px 24px 0;     /* ticker + navbar */
+        }
+
+        .pv-layout {
+            display: grid;
+            grid-template-columns: 380px minmax(0, 1fr);
+            gap: 40px;
+            align-items: start;
+        }
+
+        /* ── Left: title, description, keywords ── */
+        .pv-left {
+            position: sticky;
+            top: 112px;
+            height: calc(100vh - 136px);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            scrollbar-width: none;     /* long descriptions scroll, quietly */
+        }
+
+        .pv-left::-webkit-scrollbar {
+            display: none;
+        }
+
+        .pv-back {
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11.5px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.55);
+            margin-bottom: 18px;
+            transition: color 0.2s ease;
+        }
+
+        .pv-back:hover {
+            color: var(--white);
+        }
+
+        .pv-title {
+            font-size: 25px;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            color: var(--white);
+            margin-bottom: 22px;
+        }
+
+        .pv-num {
+            color: rgba(255, 255, 255, 0.35);
+            margin-right: 10px;
+        }
+
+        .pv-desc {
+            font-size: 14px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.78);
+        }
+
+        .pv-desc strong {
+            display: block;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .pv-divider {
+            border: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin: 20px 0;
+        }
+
+        /* ── Right: the work ── */
+        .pv-media {
+            display: flex;
+            flex-direction: column;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .pv-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .pv-item {
+            position: relative;
+            margin: 0;
+            overflow: hidden;
+            background: #141414;
+            cursor: zoom-in;
+        }
+
+        .pv-item--alt {
+            background: #181818;
+        }
+
+        .pv-item img,
+        .pv-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .pv-item--empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pv-item-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.28);
+        }
+
+        /* ── More projects ── */
+        .pv-next {
+            margin-top: 110px;
+            padding: 40px 0 100px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .pv-next-label {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--white);
+            margin-bottom: 22px;
+        }
+
+        .pv-next-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 26px;
+        }
+
+        /* ── Focus view: the work alone, on black ── */
+        .pv-focus {
+            position: fixed;
+            inset: 0;
+            z-index: 400;              /* above the ticker and navbar */
+            background: #000000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+        }
+
+        .pv-focus.open {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.4s ease;
+        }
+
+        .pv-focus-scroll {
+            position: absolute;
+            inset: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            padding: 40px 36px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pv-focus-scroll > * {
+            width: 100%;
+            max-width: 1400px;
+            flex-shrink: 0;
+        }
+
+        .pv-focus .pv-row {
+            gap: 8px;
+        }
+
+        .pv-focus .pv-item {
+            border-radius: 10px;
+            cursor: default;
+        }
+
+        .pv-focus-close {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 2;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .pv-focus-close:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        body.pv-locked {
+            overflow: hidden;
+        }
+
+        /* ── Tablet and phone: one column, text first ── */
+        @media (max-width: 960px) {
+            .pv-layout {
+                grid-template-columns: 1fr;
+                gap: 36px;
+            }
+
+            .pv-left {
+                position: static;
+                height: auto;
+                overflow: visible;
+            }
+
+            .pv-next-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .pv-page {
+                padding: 100px 16px 0;
+            }
+
+            .pv-next {
+                margin-top: 72px;
+                padding-bottom: 72px;
+            }
+
+            .pv-next-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pv-focus-scroll {
+                padding: 64px 12px 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- UNDER-CONSTRUCTION TICKER -->
+    <div class="site-ticker" aria-hidden="true">
+        <div class="site-ticker-track">
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <header class="navbar scrolled" id="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand visible"><img src="assets/sd-logo.png" alt="Sway Design" class="nav-logo"></a>
+            <nav class="nav-links">
+                <a href="index.html" data-text="HJEM" class="nav-home">HJEM</a>
+                <a href="index.html#arbeid" data-text="ARBEID" style="color: var(--white); font-weight: 800;">ARBEID</a>
+                <a href="om-meg.html" data-text="OM MEG">OM MEG</a>
+                <a href="index.html#kontakt" data-text="KONTAKT">KONTAKT</a>
+            </nav>
+            <button class="nav-toggle" id="navToggle" aria-label="Åpne meny" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <main class="pv-page">
+        <div class="pv-layout">
+
+            <!-- LEFT: what the project is -->
+            <aside class="pv-left">
+                <a href="index.html#arbeid" class="pv-back">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="19" y1="12" x2="5" y2="12"/>
+                        <polyline points="12 19 5 12 12 5"/>
+                    </svg>
+                    Portfolio
+                </a>
+                <h1 class="pv-title"><span class="pv-num"></span><span class="pv-name"></span></h1>
+                <div class="pv-desc"></div>
+            </aside>
+
+            <!-- RIGHT: the work -->
+            <div class="pv-right">
+                <div class="pv-media"></div>
+            </div>
+
+        </div>
+
+        <!-- MORE PROJECTS -->
+        <section class="pv-next">
+            <h2 class="pv-next-label">Flere prosjekter</h2>
+            <div class="pv-next-grid"></div>
+        </section>
+    </main>
+
+    <!-- FOCUS VIEW -->
+    <div class="pv-focus" role="dialog" aria-modal="true" aria-label="Fokusvisning" aria-hidden="true">
+        <button type="button" class="pv-focus-close" aria-label="Lukk fokusvisning">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+                <line x1="6" y1="6" x2="18" y2="18"/>
+                <line x1="18" y1="6" x2="6" y2="18"/>
+            </svg>
+        </button>
+        <div class="pv-focus-scroll"></div>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <p class="footer-credit">Designed by Jonathan Kindingstad, built by Claude</p>
+            <a href="https://www.instagram.com/sway_design/" target="_blank" rel="noopener" class="footer-ig" aria-label="Instagram">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+            </a>
+        </div>
+    </footer>
+
+    <script src="prosjekter.js?v=8"></script>
+    <script>
+    (function () {
+        const list  = window.PROSJEKTER || [];
+        const id    = new URLSearchParams(location.search).get('p');
+        const index = list.findIndex(p => p.id === id);
+        if (index < 0) {                       // unknown or missing project
+            location.replace('index.html#arbeid');
+            return;
+        }
+        const p = list[index];
+
+        const $  = (sel) => document.querySelector(sel);
+        const el = (tag, cls) => {
+            const node = document.createElement(tag);
+            if (cls) node.className = cls;
+            return node;
+        };
+        const pad = (n) => String(n).padStart(2, '0');
+
+        // ── Left column ──
+        document.title = `${p.tittel} — Sway Design`;
+        $('.pv-num').textContent  = p.id;
+        $('.pv-name').textContent = p.tittel;
+
+        const desc = $('.pv-desc');
+        p.beskrivelse.forEach((block, i) => {
+            if (i) desc.appendChild(el('hr', 'pv-divider'));
+            const para = el('p');
+            const label = el('strong');
+            label.textContent = `${block.label}:`;
+            para.append(label, document.createTextNode(block.tekst));
+            desc.appendChild(para);
+        });
+
+        // ── Right column: flush media stack ──
+        const media  = $('.pv-media');
+        const counts = { bilde: 0, video: 0 };
+        let n = 0;
+
+        function mediaItem(m) {
+            const fig = el('figure', 'pv-item');
+            if (m.format) fig.style.aspectRatio = m.format;
+            if (n % 2) fig.classList.add('pv-item--alt');
+            fig.dataset.i = n++;
+
+            if (m.src && m.type === 'video') {
+                const v = el('video');
+                v.src = m.src;
+                v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true;
+                v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+                fig.appendChild(v);
+            } else if (m.src) {
+                const img = el('img');
+                img.src = m.src;
+                img.alt = m.alt || '';
+                img.loading = 'lazy';
+                fig.appendChild(img);
+            } else {
+                fig.classList.add('pv-item--empty');
+                const label = el('span', 'pv-item-label');
+                label.textContent = `${m.type === 'video' ? 'Video' : 'Bilde'} ${pad(++counts[m.type === 'video' ? 'video' : 'bilde'])}`;
+                fig.appendChild(label);
+            }
+
+            // every item opens the focus view, scrolled to itself
+            fig.tabIndex = 0;
+            fig.setAttribute('role', 'button');
+            fig.setAttribute('aria-label', 'Vis i fokusvisning');
+            const open = () => openFocus(fig.dataset.i, fig);
+            fig.addEventListener('click', open);
+            fig.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+            });
+            return fig;
+        }
+
+        p.media.forEach(m => {
+            if (m.type === 'par') {
+                const row = el('div', 'pv-row');
+                m.items.forEach(item => row.appendChild(mediaItem(item)));
+                media.appendChild(row);
+            } else {
+                media.appendChild(mediaItem(m));
+            }
+        });
+
+        // ── Focus view: the same stack, large, on black ──
+        const focus       = $('.pv-focus');
+        const focusScroll = $('.pv-focus-scroll');
+        const focusClose  = $('.pv-focus-close');
+        let returnTo = null;
+
+        [...media.children].forEach(node => {
+            const copy = node.cloneNode(true);
+            copy.querySelectorAll('[tabindex]').forEach(x => {
+                x.removeAttribute('tabindex'); x.removeAttribute('role'); x.removeAttribute('aria-label');
+            });
+            if (copy.matches('[tabindex]')) {
+                copy.removeAttribute('tabindex'); copy.removeAttribute('role'); copy.removeAttribute('aria-label');
+            }
+            copy.querySelectorAll('video').forEach(v => { v.muted = true; v.play().catch(() => {}); });
+            focusScroll.appendChild(copy);
+        });
+
+        // Opened by clicking any image: the view starts at that image
+        function openFocus(i, trigger) {
+            returnTo = trigger;
+            focus.classList.add('open');
+            focus.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('pv-locked');
+            const target = focusScroll.querySelector(`[data-i="${i}"]`);
+            focusScroll.scrollTop = target
+                ? target.getBoundingClientRect().top - focusScroll.getBoundingClientRect().top + focusScroll.scrollTop - 40
+                : 0;
+            focusClose.focus({ preventScroll: true });
+        }
+
+        function closeFocus() {
+            focus.classList.remove('open');
+            focus.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('pv-locked');
+            if (returnTo) returnTo.focus({ preventScroll: true });
+        }
+
+        focusClose.addEventListener('click', closeFocus);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && focus.classList.contains('open')) closeFocus();
+        });
+
+        // ── More projects: the next three, wrapping round ──
+        const next = $('.pv-next-grid');
+        for (let k = 1; k <= Math.min(3, list.length - 1); k++) {
+            const q = list[(index + k) % list.length];
+            const card = el('a', 'pf-card' + (q.cover ? '' : ' pf-card--empty'));
+            card.href = `prosjekt.html?p=${encodeURIComponent(q.id)}`;
+
+            const shot = el('div', 'pf-shot');
+            if (q.cover) {
+                const img = el('img');
+                img.src = q.cover; img.alt = ''; img.loading = 'lazy';
+                shot.appendChild(img);
+            } else {
+                const label = el('span', 'pf-empty');
+                label.textContent = `Prosjekt ${q.id}`;
+                shot.appendChild(label);
+            }
+            const arrow = el('span', 'pf-arrow');
+            arrow.setAttribute('aria-hidden', 'true');
+            shot.appendChild(arrow);
+
+            const title = el('h3', 'visually-hidden');   // image-only card, named for screen readers
+            title.textContent = q.tittel;
+
+            card.append(shot, title);
+            next.appendChild(card);
+        }
+    })();
+    </script>
+    <script src="script.js?v=43"></script>
+</body>
+</html>

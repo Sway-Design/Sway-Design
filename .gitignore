@@ -2,6 +2,9 @@
 # Den publiserte siden bruker arbeid-files/ og video-files/ (de statiske kopiene).
 # Originalvideoen på 251 MB ligger i Arbeid/ og holdes dermed utenfor GitHub.
 Arbeid/
+# Originals dropped in for new portfolio projects; the site uses the
+# web-sized copies in portfolio-files/.
+PORTFOLIO/
 _image_originals/
 assets/arbeid/
 

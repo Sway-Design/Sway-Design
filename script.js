@@ -1,14 +1,16 @@
 const navbar    = document.getElementById('navbar');
 const navBrand  = document.querySelector('.nav-brand');
 const heroTitle = document.querySelector('.hero-logo');
-const heroBg    = document.querySelector('.hero-bg');
+const heroContent = document.querySelector('.hero-content');
+// Reduced motion: the hero still dims, but doesn't scale or drift
+const heroStill = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const hero      = document.querySelector('.hero');
 
 // ─── Cached layout measurements ─────────────────────────────────────────────
 // getBoundingClientRect() forces a synchronous layout (expensive on every
 // scroll tick). We read these values once and keep them up-to-date on resize.
 let titleDocBottom = 0;   // hero-title bottom edge in document coordinates
-let heroDocHeight  = 0;   // hero section height (parallax upper bound)
+let heroDocHeight  = 0;   // hero height = how far you scroll before it's covered
 let rafId          = null; // pending rAF handle (prevents duplicate frames)
 
 function cacheMeasurements() {
@@ -30,9 +32,22 @@ function applyScrollState() {
     // Show SWAY DESIGN logo once hero title has scrolled past navbar
     navBrand.classList.toggle('visible', (titleDocBottom - scrollY) < 72);
 
-    // GPU-accelerated parallax — skip once hero is off-screen
-    if (heroBg && scrollY < heroDocHeight) {
-        heroBg.style.transform = `translateY(${scrollY * 0.4}px)`;
+    // The pinned hero falls back as the page slides over it: the wallpaper
+    // stays put and darkens, while the text shrinks, drifts up and fades out —
+    // it holds on for the first 20 % of the way, then fades over the next 45 %.
+    // Only opacity and transform change, so it stays smooth on phones.
+    if (hero && heroDocHeight) {
+        const covered = scrollY >= heroDocHeight;
+        const p = Math.min(1, scrollY / heroDocHeight);
+        hero.style.visibility = covered ? 'hidden' : '';   // nothing to paint once covered
+        if (!covered) {
+            hero.style.opacity = String(1 - 0.7 * p);
+            if (heroContent) {
+                const fade = Math.min(1, Math.max(0, (p - 0.2) / 0.45));
+                heroContent.style.opacity = String(1 - fade);
+                heroContent.style.transform = heroStill ? '' : `translateY(${-70 * p}px) scale(${1 - 0.08 * p})`;
+            }
+        }
     }
 }
 

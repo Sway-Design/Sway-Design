@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=47">
+    <link rel="stylesheet" href="style.css?v=55">
 </head>
 <body>
 
@@ -205,7 +205,7 @@
         </div>
     </footer>
 
-<script src="script.js?v=40"></script>
+<script src="script.js?v=43"></script>
 <script>
 // ════════════════════════════════════════════════════════════════
 //  GRAFISK DESIGN
@@ -222,7 +222,7 @@ async function initArbeid() {
     const main = document.getElementById('arbeid-main');
     let data;
     try {
-        const res = await fetch('arbeid-manifest.json?v=4');
+        const res = await fetch('arbeid-manifest.json?v=6');
         if (!res.ok) throw new Error(res.status);
         data = await res.json();
     } catch {
@@ -309,7 +309,7 @@ async function initKreativt() {
     const main = document.getElementById('kreativt-main');
     let data;
     try {
-        const res = await fetch('arbeid-manifest.json?v=4');
+        const res = await fetch('arbeid-manifest.json?v=6');
         if (!res.ok) throw new Error(res.status);
         data = await res.json();
     } catch {
@@ -394,6 +394,7 @@ function buildVideoSection(config, files, num) {
 // read as "AF1 Template kopi" to screen readers and to Google Images. These are
 // the real titles; anything missing falls back to a tidied file name.
 const WORK_TITLES = {
+    'ford-mustang-plakat.jpg':        'Ford Mustang 1966-plakat, «Perfect day for a ride in the car»',
     'nike-air-force-1-template.jpg':  'Nike Air Force 1 template-plakat',
     'air-jordan-1-smoke-grey.jpg':    'Air Jordan 1 «Smoke Grey»-plakat',
     'albumcover-kort.jpg':            'Albumcover satt opp som samlekort',
@@ -406,7 +407,7 @@ const WORK_TITLES = {
     'sway-design-plakat.jpg':         'Sway Design-plakat',
     'steel-and-style.jpg':            '«Steel & Style»-plakat',
     'the-weeknd-plakat.jpg':          'The Weeknd-plakat',
-    'the-weeknd-filmplakat.jpg':      'The Weeknd filmplakat',
+    'the-weeknd-filmplakat.jpg':      'The Weeknd «After Hours»-filmplakat',
 
     'butterfly-bla.jpg':              'Butterfly-design, blå',
     'butterfly-oransje.jpg':          'Butterfly-design, oransje',

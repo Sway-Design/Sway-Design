@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=47">
+    <link rel="stylesheet" href="style.css?v=55">
 
     <!-- Business details for search engines. This is what lets Google show
          Sway Design as a Bergen design business rather than just a web page. -->
@@ -120,20 +120,78 @@
         </div>
     </section>
 
-    <!-- ARBEID -->
+    <!-- PORTFOLIO — the curated selection, first thing after the hero.
+         Keeps id="arbeid" so the nav, the SE ARBEID button and links from the
+         other pages all land here. Each card opens prosjekt.html?p=<nr>,
+         which is built from prosjekter.js. The cards are image-only; the
+         title is there for screen readers and search engines. To fill a
+         slot: swap the .pf-empty label for an <img>, set the title, drop
+         the pf-card--empty class, and fill the same project in prosjekter.js. -->
     <section class="s-arbeid" id="arbeid">
         <div class="container">
-            <h2 class="display-heading">ARBEID</h2>
-            <div class="work-grid">
-                <a href="arbeid.html" class="work-card">
-                    <img src="assets/folder-1-new.png" alt="Grafisk Design">
+            <h2 class="display-heading">PORTFOLIO</h2>
+            <div class="pf-grid">
+
+                <a href="prosjekt.html?p=01" class="pf-card">
+                    <div class="pf-shot"><img src="portfolio-files/01-rubix-curve/cover.jpg?v=2" alt="" loading="lazy" width="1200" height="900"><span class="pf-arrow" aria-hidden="true"></span></div>
+                    <h3 class="visually-hidden">Rubix Curve</h3>
                 </a>
-                <a href="arbeid.html#video-design" class="work-card">
-                    <img src="assets/folder-2-new.png" alt="Videoredigering">
+
+                <a href="prosjekt.html?p=02" class="pf-card pf-card--empty">
+                    <div class="pf-shot"><span class="pf-empty">Prosjekt 02</span><span class="pf-arrow" aria-hidden="true"></span></div>
+                    <h3 class="visually-hidden">Prosjektnavn</h3>
                 </a>
-                <a href="arbeid.html#kreativt-arbeid" class="work-card">
-                    <img src="assets/folder-3-new.png" alt="Kreativt Arbeid">
+
+                <a href="prosjekt.html?p=03" class="pf-card pf-card--empty">
+                    <div class="pf-shot"><span class="pf-empty">Prosjekt 03</span><span class="pf-arrow" aria-hidden="true"></span></div>
+                    <h3 class="visually-hidden">Prosjektnavn</h3>
                 </a>
+
+                <a href="prosjekt.html?p=04" class="pf-card pf-card--empty">
+                    <div class="pf-shot"><span class="pf-empty">Prosjekt 04</span><span class="pf-arrow" aria-hidden="true"></span></div>
+                    <h3 class="visually-hidden">Prosjektnavn</h3>
+                </a>
+
+                <a href="prosjekt.html?p=05" class="pf-card pf-card--empty">
+                    <div class="pf-shot"><span class="pf-empty">Prosjekt 05</span><span class="pf-arrow" aria-hidden="true"></span></div>
+                    <h3 class="visually-hidden">Prosjektnavn</h3>
+                </a>
+
+                <a href="prosjekt.html?p=06" class="pf-card pf-card--empty">
+                    <div class="pf-shot"><span class="pf-empty">Prosjekt 06</span><span class="pf-arrow" aria-hidden="true"></span></div>
+                    <h3 class="visually-hidden">Prosjektnavn</h3>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ARKIV — the folders, now the way into the full archive -->
+    <section class="s-arkiv">
+        <div class="container">
+            <div class="ark-row">
+                <div class="ark-copy">
+                    <h2 class="ark-heading">Vil du se mer?</h2>
+                    <p class="ark-desc">Alt arbeidet mitt samlet — plakater, klesdesign, magasiner, malerier og video.</p>
+                    <a href="arbeid.html" class="btn-outline">
+                        SE HELE ARKIVET
+                        <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="work-grid work-grid--compact">
+                    <a href="arbeid.html" class="work-card">
+                        <img src="assets/folder-1-new.png" alt="Grafisk design">
+                    </a>
+                    <a href="arbeid.html#video-design" class="work-card">
+                        <img src="assets/folder-2-new.png" alt="Videoredigering">
+                    </a>
+                    <a href="arbeid.html#kreativt-arbeid" class="work-card">
+                        <img src="assets/folder-3-new.png" alt="Kreativt arbeid">
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -148,8 +206,16 @@
                     <img src="assets/poster-1.jpg" alt="" class="fan-poster fan-front">
                 </div>
                 <div class="produkter-copy">
-                    <h2 class="produkter-heading">Produkter som fremmer <em>ditt</em> uttrykk</h2>
-                    <p class="produkter-desc">I Sway Design lager jeg arbeid som gir deg resultatene du er ute etter</p>
+                    <h2 class="produkter-heading">Hva jeg kan lage <em>for deg</em></h2>
+                    <ul class="tjeneste-list">
+                        <li>Plakater og print <span>Fra idé til trykkfil</span></li>
+                        <li>Klesdesign <span>Grafikk og mockup</span></li>
+                        <li>Magasin og layout <span>Redaksjonell design</span></li>
+                        <li>Motion graphics <span>Logo og animasjon</span></li>
+                        <li>UI/UX-design <span>Apper og nettsider</span></li>
+                        <li>Videoredigering <span>Klipp og farge</span></li>
+                    </ul>
+                    <p class="tjeneste-note">Ta kontakt for en uforpliktende prat om pris.</p>
                 </div>
             </div>
         </div>
@@ -226,6 +292,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=40"></script>
+    <script src="script.js?v=43"></script>
 </body>
 </html>

@@ -292,14 +292,26 @@ a {
 /* =====================
    HERO
    ===================== */
+/* The hero stays pinned to the top while the rest of the page slides up
+   over it; script.js dims it and fades the text as that happens. */
 .hero {
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 0;
     min-height: calc(100vh + 28px);
     display: flex;
     align-items: center;
     overflow: hidden;
     background-color: #1a0808;
-    padding-bottom: 90px;
+    padding-bottom: 120px;   /* centres the text 15px above the middle */
+    will-change: opacity;
+}
+
+/* Everything after the hero is stacked above it, so it covers it */
+.hero ~ section,
+.hero ~ footer {
+    position: relative;
+    z-index: 1;
 }
 
 /* Phones: shorten the hero so the rounded top edge of the panel below peeks
@@ -329,7 +341,6 @@ a {
     background-size: cover;
     background-position: center;
     z-index: 0;
-    will-change: transform;
 }
 
 .hero-bg::after {
@@ -356,6 +367,8 @@ a {
 
 .hero-content {
     max-width: 560px;
+    transform-origin: 0 50%;   /* shrinks towards its left edge, in line with the page */
+    will-change: transform, opacity;
 }
 
 .hero-logo {
@@ -517,6 +530,141 @@ a {
     display: block;
 }
 
+/* ── Portfolio: the curated selection under the hero ── */
+.pf-card {
+    display: block;
+}
+
+/* Image-only cards, so rows and columns share one gap */
+.pf-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+}
+
+.pf-shot {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #141414;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                border-color 0.35s ease;
+}
+
+.pf-card:hover .pf-shot,
+.pf-card:focus-visible .pf-shot {
+    transform: translateY(-6px);
+}
+
+/* Round arrow in the corner: says "this opens" without words */
+.pf-arrow {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23111' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9L9 3M9 3H4M9 3V8'/%3E%3C/svg%3E") center / 13px no-repeat;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.pf-card:hover .pf-arrow,
+.pf-card:focus-visible .pf-arrow {
+    opacity: 1;
+    transform: none;
+}
+
+/* No hover on touch screens, so the arrow is always there */
+@media (hover: none) {
+    .pf-arrow {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.pf-shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* An empty slot, until the real project goes in */
+.pf-card--empty .pf-shot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #121212;
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    box-shadow: none;
+}
+
+.pf-card--empty:hover .pf-shot {
+    border-color: rgba(255, 255, 255, 0.28);
+}
+
+.pf-empty {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.28);
+}
+
+/* ── Arkiv: the folders, now the way into the full archive ── */
+.s-arkiv {
+    background: var(--black);
+    padding: 70px 0 90px;
+}
+
+.ark-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 48px;
+}
+
+.ark-copy {
+    max-width: 340px;
+}
+
+.ark-heading {
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 10px;
+}
+
+.ark-desc {
+    font-size: 14px;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.78);
+    margin-bottom: 24px;
+}
+
+.s-arkiv .btn-outline {
+    font-size: 15px;
+    padding: 13px 27px;
+    gap: 8px;
+}
+
+.s-arkiv .btn-arrow {
+    width: 16px;
+    height: 16px;
+}
+
+/* Two classes so the general .work-grid breakpoints never override it */
+.work-grid.work-grid--compact {
+    grid-template-columns: repeat(3, 142px);
+    gap: 20px;
+}
+
 /* =====================
    SECTION PRODUKTER
    ===================== */
@@ -592,11 +740,33 @@ a {
     font-size: 1.08em;
 }
 
-.produkter-desc {
+.tjeneste-list {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    max-width: 380px;
+}
+
+.tjeneste-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.78);
-    line-height: 1.75;
-    max-width: 360px;
+    color: rgba(255, 255, 255, 0.85);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tjeneste-list li span {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.45);
+    text-align: right;
+}
+
+.tjeneste-note {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 16px;
 }
 
 /* section-label is still used in kontakt */
@@ -1624,8 +1794,24 @@ a {
         text-align: center;
     }
 
-    .produkter-desc {
-        margin: 0 auto;
+    .tjeneste-list {
+        margin: 4px auto 0;
+        text-align: left;
+    }
+
+    .pf-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
+    }
+
+    .ark-row {
+        flex-direction: column;
+        text-align: center;
+        gap: 40px;
+    }
+
+    .ark-copy {
+        max-width: 420px;
     }
 
     .kontakt-card {
@@ -1692,6 +1878,21 @@ a {
 
     .display-heading {
         font-size: 28px;
+    }
+
+    .pf-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .s-arkiv {
+        padding: 56px 0 72px;
+    }
+
+    .work-grid.work-grid--compact {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        width: 100%;
     }
 }
 

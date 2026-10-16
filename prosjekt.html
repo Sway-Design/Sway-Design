@@ -58,18 +58,24 @@
             color: var(--white);
         }
 
+        /* Number above the name, the same as the section titles on Arbeid */
         .pv-title {
-            font-size: 25px;
-            font-weight: 700;
+            font-size: 26px;
+            font-weight: 600;
             line-height: 1.2;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.01em;
             color: var(--white);
             margin-bottom: 22px;
         }
 
         .pv-num {
-            color: rgba(255, 255, 255, 0.35);
-            margin-right: 10px;
+            display: block;
+            font-size: 11px;
+            font-weight: 400;
+            line-height: normal;
+            letter-spacing: 0.06em;
+            color: var(--gray-2);
+            margin-bottom: 3px;
         }
 
         .pv-desc {
@@ -120,6 +126,46 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
+        }
+
+        /* Sound on/off for videos with audio, bottom left of the video */
+        .pv-sound {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            z-index: 2;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            background: rgba(10, 10, 10, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .pv-sound:hover {
+            background: rgba(10, 10, 10, 0.75);
+        }
+
+        .pv-sound svg {
+            width: 16px;
+            height: 16px;
+            display: block;
+        }
+
+        .pv-sound .ico-on,
+        .pv-sound[aria-pressed="true"] .ico-off {
+            display: none;
+        }
+
+        .pv-sound[aria-pressed="true"] .ico-on {
             display: block;
         }
 
@@ -360,7 +406,7 @@
         </div>
     </footer>
 
-    <script src="prosjekter.js?v=8"></script>
+    <script src="prosjekter.js?v=15"></script>
     <script>
     (function () {
         const list  = window.PROSJEKTER || [];
@@ -407,11 +453,17 @@
             fig.dataset.i = n++;
 
             if (m.src && m.type === 'video') {
+                // Silent loop, no controls. The file is only fetched once the
+                // video comes near the screen (see the observer below).
                 const v = el('video');
-                v.src = m.src;
-                v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true;
+                v.dataset.src = m.src;
+                v.preload = 'none';
+                v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
                 v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+                v.setAttribute('autoplay', '');   // lets the browser start (and resume) it on its own
+                v.setAttribute('aria-label', m.alt || '');
                 fig.appendChild(v);
+                if (m.lyd) fig.appendChild(soundButton());
             } else if (m.src) {
                 const img = el('img');
                 img.src = m.src;
@@ -430,11 +482,27 @@
             fig.setAttribute('role', 'button');
             fig.setAttribute('aria-label', 'Vis i fokusvisning');
             const open = () => openFocus(fig.dataset.i, fig);
-            fig.addEventListener('click', open);
+            fig.addEventListener('click', (e) => {
+                if (!e.target.closest('.pv-sound')) open();     // the sound button does its own thing
+            });
             fig.addEventListener('keydown', (e) => {
+                if (e.target.closest('.pv-sound')) return;
                 if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
             });
             return fig;
+        }
+
+        function soundButton() {
+            const b = el('button', 'pv-sound');
+            b.type = 'button';
+            b.setAttribute('aria-pressed', 'false');
+            b.setAttribute('aria-label', 'Slå på lyd');
+            b.innerHTML =
+                '<svg class="ico-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                    '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>' +
+                '<svg class="ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                    '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+            return b;
         }
 
         p.media.forEach(m => {
@@ -461,9 +529,43 @@
             if (copy.matches('[tabindex]')) {
                 copy.removeAttribute('tabindex'); copy.removeAttribute('role'); copy.removeAttribute('aria-label');
             }
-            copy.querySelectorAll('video').forEach(v => { v.muted = true; v.play().catch(() => {}); });
             focusScroll.appendChild(copy);
         });
+
+        // Load a video when it comes near the screen, play it while it's
+        // visible, pause it when it isn't (saves battery on phones).
+        // Videos start muted (browsers only autoplay silent video); the sound
+        // button turns sound on for that video, both on the page and in the
+        // focus view.
+        const soundOn = new Set();
+        const startVideo = (v) => {
+            if (!v.getAttribute('src') && v.dataset.src) v.src = v.dataset.src;
+            v.muted = !soundOn.has(v.dataset.src);
+            v.play().catch(() => {});
+        };
+
+        document.addEventListener('click', (e) => {
+            const b = e.target.closest('.pv-sound');
+            if (!b) return;
+            const v = b.parentElement.querySelector('video');
+            const on = v.muted;                              // muted now → turn sound on
+            on ? soundOn.add(v.dataset.src) : soundOn.delete(v.dataset.src);
+            document.querySelectorAll('.pv-sound').forEach(btn => {
+                const vid = btn.parentElement.querySelector('video');
+                if (vid.dataset.src !== v.dataset.src) return;
+                vid.muted = !on;
+                btn.setAttribute('aria-pressed', String(on));
+                btn.setAttribute('aria-label', on ? 'Slå av lyd' : 'Slå på lyd');
+            });
+            if (on) v.play().catch(() => {});
+        });
+        const videoWatch = new IntersectionObserver((entries) => {
+            entries.forEach(({ target: v, isIntersecting }) => {
+                if (isIntersecting) startVideo(v);
+                else if (v.getAttribute('src')) v.pause();
+            });
+        }, { rootMargin: '300px 0px' });
+        media.querySelectorAll('video').forEach(v => videoWatch.observe(v));
 
         // Opened by clicking any image: the view starts at that image
         function openFocus(i, trigger) {
@@ -471,6 +573,8 @@
             focus.classList.add('open');
             focus.setAttribute('aria-hidden', 'false');
             document.body.classList.add('pv-locked');
+            media.querySelectorAll('video').forEach(v => v.pause());   // never two copies with sound
+            focusScroll.querySelectorAll('video').forEach(startVideo);
             const target = focusScroll.querySelector(`[data-i="${i}"]`);
             focusScroll.scrollTop = target
                 ? target.getBoundingClientRect().top - focusScroll.getBoundingClientRect().top + focusScroll.scrollTop - 40
@@ -482,6 +586,11 @@
             focus.classList.remove('open');
             focus.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('pv-locked');
+            focusScroll.querySelectorAll('video').forEach(v => v.pause());
+            media.querySelectorAll('video').forEach(v => {            // pick up where the page left off
+                const r = v.getBoundingClientRect();
+                if (v.getAttribute('src') && r.bottom > 0 && r.top < innerHeight) startVideo(v);
+            });
             if (returnTo) returnTo.focus({ preventScroll: true });
         }
 
@@ -504,7 +613,7 @@
                 shot.appendChild(img);
             } else {
                 const label = el('span', 'pf-empty');
-                label.textContent = `Prosjekt ${q.id}`;
+                label.textContent = q.tittel;
                 shot.appendChild(label);
             }
             const arrow = el('span', 'pf-arrow');

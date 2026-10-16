@@ -68,6 +68,6 @@
         plassholder('03', 'Magazines'),
         plassholder('04', 'Motion Video'),
         plassholder('05', 'Video'),
-        plassholder('06', 'Posters'),
+        { ...plassholder('06', 'Posters'), cover: 'portfolio-files/06-posters/cover.jpg?v=3' },
     ];
 })();

@@ -65,7 +65,7 @@
     window.PROSJEKTER = [
         rubix,
         plassholder('02', 'App'),
-        plassholder('03', 'Magazines'),
+        { ...plassholder('03', 'Magazines'), cover: 'portfolio-files/03-magazines/cover.jpg?v=1' },
         plassholder('04', 'Motion Video'),
         plassholder('05', 'Video'),
         { ...plassholder('06', 'Posters'), cover: 'portfolio-files/06-posters/cover.jpg?v=3' },

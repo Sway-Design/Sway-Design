@@ -17,6 +17,10 @@
 //                 { type: 'par', items: [ {...}, {...} ] }
 //               `format` is the box shape (e.g. '16 / 9'). Without a src
 //               the item shows as an empty placeholder in that shape.
+//               or a magazine you page through, like the one on Arbeid:
+//                 { type: 'magasin', tittel, mappe, sider }
+//               `mappe` holds the pages as 00.jpg, 01.jpg … (00 is the
+//               cover); `sider` is how many there are.
 
 (function () {
     const dir = 'portfolio-files/01-rubix-curve';
@@ -65,7 +69,14 @@
     window.PROSJEKTER = [
         rubix,
         plassholder('02', 'App'),
-        { ...plassholder('03', 'Magazines'), cover: 'portfolio-files/03-magazines/cover.jpg?v=1' },
+        {
+            ...plassholder('03', 'Magazines'),
+            cover: 'portfolio-files/03-magazines/cover.jpg?v=1',
+            media: [
+                { type: 'magasin', tittel: 'Her Loss', mappe: 'arbeid-files/Her Loss Magasin', sider: 62 },
+                { type: 'magasin', tittel: 'Stylish',  mappe: 'arbeid-files/Stylish',          sider: 50 },
+            ],
+        },
         plassholder('04', 'Motion Video'),
         plassholder('05', 'Video'),
         { ...plassholder('06', 'Posters'), cover: 'portfolio-files/06-posters/cover.jpg?v=3' },

@@ -183,6 +183,65 @@
             color: rgba(255, 255, 255, 0.28);
         }
 
+        /* ── Magazine: the Arbeid flipbook, filling the column edge to edge,
+              with the arrows sitting on the outer edge of each page ── */
+        .pv-mag {
+            background: #141414;
+        }
+
+        .pv-mag--alt {
+            background: #181818;
+        }
+
+        .pv-mag + .pv-mag {
+            margin-top: 8px;
+        }
+
+        .pv-mag .flipbook {
+            position: relative;
+            display: block;
+        }
+
+        .pv-mag .flipbook-stage {
+            width: 100%;
+            max-height: none;
+        }
+
+        .pv-mag .flipbook-nav {
+            position: absolute;
+            top: 50%;
+            width: 34px;
+            height: 34px;
+            transform: translateY(-50%);
+            color: #ffffff;
+            background: rgba(10, 10, 10, 0.35);
+            border-color: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .pv-mag .flipbook-nav:hover {
+            background: rgba(10, 10, 10, 0.6);
+        }
+
+        .pv-mag .flipbook-nav:disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .pv-mag .flipbook-nav:first-child { left: 14px; }
+        .pv-mag .flipbook-nav:last-child  { right: 14px; }
+
+        @media (max-width: 760px) {
+            .pv-mag .flipbook-nav {
+                width: 28px;
+                height: 28px;
+            }
+
+            .pv-mag .flipbook-nav:first-child { left: 8px; }
+            .pv-mag .flipbook-nav:last-child  { right: 8px; }
+        }
+
         /* ── More projects ── */
         .pv-next {
             margin-top: 110px;
@@ -406,7 +465,7 @@
         </div>
     </footer>
 
-    <script src="prosjekter.js?v=18"></script>
+    <script src="prosjekter.js?v=19"></script>
     <script>
     (function () {
         const list  = window.PROSJEKTER || [];
@@ -505,8 +564,152 @@
             return b;
         }
 
+        // ── Magazine: turn the pages in place, the same way as on Arbeid ──
+        // A "view" is one spread: view 0 is the cover alone on the right,
+        // view n is pages 2n-1 / 2n, and a last odd page stands alone on the
+        // left. A turn animates one leaf; the pages underneath are already
+        // set to where the turn ends, so the leaf simply uncovers them.
+        const FLIP_MS = 620;
+        const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const arrow = (d) => `<svg width="13" height="13" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="${d}" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+        let magCount = 0;
+
+        function magazine(m) {
+            const wrap = el('section', 'pv-mag' + (magCount++ % 2 ? ' pv-mag--alt' : ''));
+            wrap.setAttribute('aria-label', m.tittel);
+            wrap.innerHTML =
+                '<div class="flipbook" tabindex="0" role="group" aria-roledescription="bok">' +
+                    `<button type="button" class="flipbook-nav" aria-label="Forrige side">${arrow('M7.5 2L2.5 6L7.5 10')}</button>` +
+                    '<div class="flipbook-stage">' +
+                        '<div class="flipbook-page flipbook-page--left"><img alt="" draggable="false"></div>' +
+                        '<div class="flipbook-page flipbook-page--right"><img alt="" draggable="false"></div>' +
+                        '<div class="flipbook-leaf">' +
+                            '<div class="flipbook-leaf-face flipbook-leaf-front"><img alt="" draggable="false"></div>' +
+                            '<div class="flipbook-leaf-face flipbook-leaf-back"><img alt="" draggable="false"></div>' +
+                        '</div>' +
+                    '</div>' +
+                    `<button type="button" class="flipbook-nav" aria-label="Neste side">${arrow('M4.5 2L9.5 6L4.5 10')}</button>` +
+                '</div>' +
+                '<p class="flipbook-counter visually-hidden" aria-live="polite"></p>';
+
+            const book  = wrap.querySelector('.flipbook');
+            const stage = wrap.querySelector('.flipbook-stage');
+            const leaf  = wrap.querySelector('.flipbook-leaf');
+            const [leftImg, rightImg, frontImg, backImg] = wrap.querySelectorAll('img');
+            const [prevBtn, nextBtn] = wrap.querySelectorAll('.flipbook-nav');
+            const counter = wrap.querySelector('.flipbook-counter');
+            book.setAttribute('aria-label', `${m.tittel} — bruk piltastene for å bla`);
+
+            const total  = m.sider;
+            const url    = (i) => `${m.mappe.split('/').map(encodeURIComponent).join('/')}/${pad(i)}.jpg`;
+            const leftOf  = (v) => v === 0 ? -1 : 2 * v - 1;
+            const rightOf = (v) => v === 0 ? 0 : 2 * v;
+            const maxView = Math.ceil((total - 1) / 2);
+            const single  = (v) => leftOf(v) < 0 || rightOf(v) >= total;
+            let view = 0, turning = false;
+
+            function setImg(img, i) {
+                if (i >= 0 && i < total) {
+                    img.src = url(i);
+                    img.alt = `${m.tittel} side ${i + 1}`;
+                    img.style.visibility = 'visible';
+                } else {
+                    img.removeAttribute('src');
+                    img.style.visibility = 'hidden';
+                }
+            }
+
+            // the spreads either side, so a turn never waits on the network
+            function preload(v) {
+                [v - 1, v + 1].forEach(w => [leftOf(w), rightOf(w)]
+                    .filter(i => w >= 0 && i >= 0 && i < total)
+                    .forEach(i => { new Image().src = url(i); }));
+            }
+
+            function render() {
+                setImg(leftImg, leftOf(view));
+                setImg(rightImg, rightOf(view));
+                stage.classList.toggle('flipbook-stage--single', single(view));   // no spine, no shadow
+                const shown = [leftOf(view), rightOf(view)].filter(i => i >= 0 && i < total).map(i => i + 1);
+                counter.textContent = `${m.tittel}, side ${shown.join('–')} av ${total}`;
+                prevBtn.disabled = view === 0;
+                nextBtn.disabled = view >= maxView;
+            }
+
+            // side: the half the leaf sits on ('right' turns forward, 'left' back)
+            function flip({ side, toDeg, frontIdx, backIdx, underLeft, underRight, to }) {
+                setImg(leftImg, underLeft);
+                setImg(rightImg, underRight);
+                stage.classList.toggle('flipbook-stage--single', single(to));
+                leaf.classList.toggle('flipbook-leaf--front-plain', single(view));
+                leaf.classList.toggle('flipbook-leaf--back-plain', single(to));
+
+                if (reducedMotion) { view = to; render(); preload(view); return; }
+
+                turning = true;
+                setImg(frontImg, frontIdx);
+                setImg(backImg, backIdx);
+                leaf.classList.toggle('flipbook-leaf--left', side === 'left');
+                leaf.style.transition = 'none';
+                leaf.style.transform  = 'rotateY(0deg)';
+                leaf.style.display = 'block';
+                void leaf.offsetWidth;                 // commit the start position
+                leaf.style.transition = '';
+                leaf.style.transform  = `rotateY(${toDeg}deg)`;
+
+                setTimeout(() => {
+                    leaf.style.display = 'none';
+                    turning = false;
+                    view = to;
+                    render();
+                    preload(view);
+                }, FLIP_MS);
+            }
+
+            function next() {
+                if (turning || view >= maxView) return;
+                const to = view + 1;
+                flip({ side: 'right', toDeg: -180, frontIdx: rightOf(view), backIdx: leftOf(to),
+                       underLeft: leftOf(view), underRight: rightOf(to), to });
+            }
+
+            function prev() {
+                if (turning || view === 0) return;
+                const to = view - 1;
+                flip({ side: 'left', toDeg: 180, frontIdx: leftOf(view), backIdx: rightOf(to),
+                       underLeft: leftOf(to), underRight: rightOf(view), to });
+            }
+
+            nextBtn.addEventListener('click', next);
+            prevBtn.addEventListener('click', prev);
+            stage.addEventListener('click', (e) => {
+                const r = stage.getBoundingClientRect();
+                (e.clientX - r.left > r.width / 2) ? next() : prev();
+            });
+            book.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
+                if (e.key === 'ArrowLeft')  { e.preventDefault(); prev(); }
+            });
+
+            // The book takes the shape of the inner pages (two side by side);
+            // the stylesheet's default fits the Her Loss scans until it loads.
+            const probe = new Image();
+            probe.onload = () => {
+                if (probe.naturalWidth) stage.style.aspectRatio = `${probe.naturalWidth * 2} / ${probe.naturalHeight}`;
+            };
+            probe.src = url(Math.min(1, total - 1));
+
+            render();
+            new IntersectionObserver((entries, obs) => {        // fetch the next pages once it's near
+                if (entries[0].isIntersecting) { preload(view); obs.disconnect(); }
+            }, { rootMargin: '300px 0px' }).observe(wrap);
+            return wrap;
+        }
+
         p.media.forEach(m => {
-            if (m.type === 'par') {
+            if (m.type === 'magasin') {
+                media.appendChild(magazine(m));
+            } else if (m.type === 'par') {
                 const row = el('div', 'pv-row');
                 m.items.forEach(item => row.appendChild(mediaItem(item)));
                 media.appendChild(row);
@@ -522,6 +725,7 @@
         let returnTo = null;
 
         [...media.children].forEach(node => {
+            if (node.matches('.pv-mag')) return;    // a magazine is read in place
             const copy = node.cloneNode(true);
             copy.querySelectorAll('[tabindex]').forEach(x => {
                 x.removeAttribute('tabindex'); x.removeAttribute('role'); x.removeAttribute('aria-label');

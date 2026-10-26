@@ -25,7 +25,6 @@
     --max-w: 1200px;
     --pad-x: 80px;
     --section-pad: 120px;
-    --ticker-h: 22px;
 }
 
 html {
@@ -112,7 +111,7 @@ a {
    ===================== */
 .navbar {
     position: fixed;
-    top: var(--ticker-h);
+    top: 0;
     left: 0;
     right: 0;
     z-index: 100;
@@ -233,60 +232,6 @@ a {
     border-radius: 2px;
     background: var(--white);
     transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-/* =====================
-   SITE TICKER (under-construction banner)
-   ===================== */
-.site-ticker {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 300;
-    width: 100%;
-    height: var(--ticker-h);
-    overflow: hidden;
-}
-
-.site-ticker-track {
-    display: flex;
-    align-items: center;
-    width: max-content;
-    height: 100%;
-    background: repeating-linear-gradient(
-        135deg,
-        #f5c518 0px,
-        #f5c518 16px,
-        #0a0a0a 16px,
-        #0a0a0a 32px
-    );
-    animation: site-ticker-scroll 26s linear infinite;
-    will-change: transform;
-}
-
-.site-ticker-track span {
-    display: inline-flex;
-    align-items: center;
-    padding: 0 20px;
-    font-family: var(--font-body);
-    font-weight: 800;
-    font-size: 12.5px;
-    letter-spacing: 0.07em;
-    color: var(--white);
-    white-space: nowrap;
-    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
-}
-
-@keyframes site-ticker-scroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .site-ticker-track {
-        animation: none;
-    }
 }
 
 /* =====================
@@ -1682,7 +1627,7 @@ a {
 /* Arbeid page responsive */
 @media (max-width: 600px) {
     .arbeid-page-header {
-        padding: 108px 0 32px; /* clears scrolled navbar (~56px) + ticker (22px) */
+        padding: 86px 0 32px; /* clears the scrolled navbar (~56px) */
     }
 
     .video-page-header {

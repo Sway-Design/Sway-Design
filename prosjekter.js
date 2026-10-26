@@ -7,12 +7,15 @@
 //  id           matches the link on the front page (prosjekt.html?p=01)
 //  tittel       project name
 //  cover        card image (4:3); null shows an empty placeholder
+//  lenke        optional: the card goes here instead of a project view
 //  beskrivelse  blocks in the left column, separated by thin lines
 //  media        the right column, top to bottom. Each item is
 //                 { type: 'bilde' | 'video', src, alt, format }
 //               Videos autoplay muted on a loop, without controls, and only
 //               load once they're scrolled near. `lyd: true` adds a small
 //               sound button (bottom left) for videos that have audio.
+//               `kontroller: true` gives it the full player from Arbeid
+//               instead (timeline, volume, fullscreen); it waits for a click.
 //               or a side-by-side pair:
 //                 { type: 'par', items: [ {...}, {...} ] }
 //               `format` is the box shape (e.g. '16 / 9'). Without a src
@@ -72,13 +75,34 @@
         {
             ...plassholder('03', 'Magazines'),
             cover: 'portfolio-files/03-magazines/cover.jpg?v=1',
+            beskrivelse: [
+                { label: 'Konsept', tekst: 'Personlige prosjekter fra 2023. Jeg kom opp med konsept, layout, typografi og hele uttrykket, fra forside til siste side. Det eneste jeg ikke har laget, er bildene, som er hentet fra nettet.' },
+                { label: 'Resultat', tekst: 'Begge magasinene er trykket i flere fysiske eksemplarer. De var også en del av opptaksprøven til studiet jeg går på i dag, ved Fakultet for kunst, musikk og design, og en av grunnene til at jeg kom inn.' },
+            ],
             media: [
                 { type: 'magasin', tittel: 'Her Loss', mappe: 'arbeid-files/Her Loss Magasin', sider: 62 },
                 { type: 'magasin', tittel: 'Stylish',  mappe: 'arbeid-files/Stylish',          sider: 50 },
             ],
         },
-        plassholder('04', 'Motion Video'),
-        plassholder('05', 'Video'),
-        { ...plassholder('06', 'Posters'), cover: 'portfolio-files/06-posters/cover.jpg?v=3' },
+        {
+            id: '04',
+            tittel: 'Motion Video',
+            cover: 'portfolio-files/04-motion-video/cover.jpg?v=3',
+            beskrivelse: [],
+            media: [
+                { type: 'video', src: 'video-files/Motion%20Graphics/promo-video.mp4', format: '16 / 9', kontroller: true, alt: 'Promovideo for Sway Design med animert typografi' },
+                { type: 'video', src: 'portfolio-files/04-motion-video/after-effects-prosess.mp4', kontroller: true, alt: 'Skjermopptak fra After Effects: tidslinjen og lagene bak animasjonen' },
+            ],
+        },
+        {
+            id: '05',
+            tittel: 'Video',
+            cover: 'portfolio-files/05-video/cover.jpg?v=1',
+            beskrivelse: [],
+            media: [
+                { type: 'video', src: 'video-files/Videoredigering/balestrand-open-sinners-edit.mp4', format: '16 / 9', kontroller: true, alt: 'Balestrand Open 2025: ski og snowboard i fjellet' },
+            ],
+        },
+        { ...plassholder('06', 'Posters'), cover: 'portfolio-files/06-posters/cover.jpg?v=3', lenke: 'arbeid.html#plakatdesign' },
     ];
 })();

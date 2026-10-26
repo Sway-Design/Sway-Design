@@ -9,13 +9,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=57">
+    <link rel="stylesheet" href="style.css?v=58">
     <style>
         /* ── Project view ──────────────────────────────────────────────
            Text column on the left stays put while the work scrolls past
            on the right; the media stack is flush, rounded as one block. */
         .pv-page {
-            padding: 112px 24px 0;     /* ticker + navbar */
+            padding: 90px 24px 0;      /* clears the navbar */
         }
 
         .pv-layout {
@@ -28,8 +28,8 @@
         /* ── Left: title, description, keywords ── */
         .pv-left {
             position: sticky;
-            top: 112px;
-            height: calc(100vh - 136px);
+            top: 90px;
+            height: calc(100vh - 114px);
             display: flex;
             flex-direction: column;
             overflow-y: auto;
@@ -183,6 +183,35 @@
             color: rgba(255, 255, 255, 0.28);
         }
 
+        /* ── Video with the Arbeid player (style.css .vc-*), in place ── */
+        .pv-player .video-player-wrap {
+            border-radius: 0;          /* the media stack rounds the corners */
+        }
+
+        /* big play button while paused, the same as the cards on Arbeid */
+        .pv-player-play {
+            position: absolute;
+            top: calc(50% - 34px);     /* centred on the picture, not the bar */
+            left: 50%;
+            z-index: 1;
+            width: 64px;
+            height: 64px;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.35));
+            transition: opacity 0.2s ease;
+        }
+
+        .pv-player.playing .pv-player-play {
+            opacity: 0;
+        }
+
+        .pv-player :fullscreen video,
+        .pv-player .video-player-wrap:fullscreen video {
+            max-height: calc(100vh - 68px);
+            height: calc(100vh - 68px);
+        }
+
         /* ── Magazine: the Arbeid flipbook, filling the column edge to edge,
               with the arrows sitting on the outer edge of each page ── */
         .pv-mag {
@@ -202,9 +231,20 @@
             display: block;
         }
 
+        /* Closed (front or back cover alone), the book slides to the middle of
+           the grey area; opening slides it back as the page turns, with the
+           page turn's own duration and easing (style.css .flipbook-leaf). */
         .pv-mag .flipbook-stage {
             width: 100%;
             max-height: none;
+            transition: transform 0.62s cubic-bezier(0.45, 0.05, 0.3, 1);
+        }
+
+        .pv-mag .flipbook-stage--closed-front { transform: translateX(-25%); }
+        .pv-mag .flipbook-stage--closed-back  { transform: translateX(25%); }
+
+        @media (prefers-reduced-motion: reduce) {
+            .pv-mag .flipbook-stage { transition: none; }
         }
 
         .pv-mag .flipbook-nav {
@@ -269,7 +309,7 @@
         .pv-focus {
             position: fixed;
             inset: 0;
-            z-index: 400;              /* above the ticker and navbar */
+            z-index: 400;              /* above the navbar */
             background: #000000;
             opacity: 0;
             visibility: hidden;
@@ -377,23 +417,6 @@
 </head>
 <body>
 
-    <!-- UNDER-CONSTRUCTION TICKER -->
-    <div class="site-ticker" aria-hidden="true">
-        <div class="site-ticker-track">
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-        </div>
-    </div>
 
     <!-- NAVIGATION -->
     <header class="navbar scrolled" id="navbar">
@@ -454,7 +477,7 @@
 
     <footer class="footer">
         <div class="container footer-inner">
-            <p class="footer-credit">Designed by Jonathan Kindingstad, built by Claude</p>
+            <p class="footer-credit">Website designed by Sway Design © 2026</p>
             <a href="https://www.instagram.com/sway_design/" target="_blank" rel="noopener" class="footer-ig" aria-label="Instagram">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -465,7 +488,7 @@
         </div>
     </footer>
 
-    <script src="prosjekter.js?v=19"></script>
+    <script src="prosjekter.js?v=31"></script>
     <script>
     (function () {
         const list  = window.PROSJEKTER || [];
@@ -476,6 +499,10 @@
             return;
         }
         const p = list[index];
+        if (p.lenke) {                         // this project lives elsewhere
+            location.replace(p.lenke);
+            return;
+        }
 
         const $  = (sel) => document.querySelector(sel);
         const el = (tag, cls) => {
@@ -608,6 +635,12 @@
             const single  = (v) => leftOf(v) < 0 || rightOf(v) >= total;
             let view = 0, turning = false;
 
+            // a lone cover sits on one half of the stage; shift it to the centre
+            function centre(v) {
+                stage.classList.toggle('flipbook-stage--closed-front', leftOf(v) < 0);
+                stage.classList.toggle('flipbook-stage--closed-back', leftOf(v) >= 0 && rightOf(v) >= total);
+            }
+
             function setImg(img, i) {
                 if (i >= 0 && i < total) {
                     img.src = url(i);
@@ -630,6 +663,7 @@
                 setImg(leftImg, leftOf(view));
                 setImg(rightImg, rightOf(view));
                 stage.classList.toggle('flipbook-stage--single', single(view));   // no spine, no shadow
+                centre(view);
                 const shown = [leftOf(view), rightOf(view)].filter(i => i >= 0 && i < total).map(i => i + 1);
                 counter.textContent = `${m.tittel}, side ${shown.join('–')} av ${total}`;
                 prevBtn.disabled = view === 0;
@@ -644,6 +678,7 @@
                 leaf.classList.toggle('flipbook-leaf--front-plain', single(view));
                 leaf.classList.toggle('flipbook-leaf--back-plain', single(to));
 
+                centre(to);                            // slides while the page turns
                 if (reducedMotion) { view = to; render(); preload(view); return; }
 
                 turning = true;
@@ -706,8 +741,102 @@
             return wrap;
         }
 
+        // ── Video with full controls: the same player as on Arbeid ──
+        const ICON = {
+            play:  '<svg viewBox="0 0 24 24" fill="white"><path d="M8 5.14v13.72a1.5 1.5 0 0 0 2.28 1.29l10.5-6.86a1.5 1.5 0 0 0 0-2.58L10.28 3.85A1.5 1.5 0 0 0 8 5.14z"/></svg>',
+            pause: '<svg viewBox="0 0 24 24" fill="white"><rect x="5" y="4" width="4" height="16" rx="1.5"/><rect x="15" y="4" width="4" height="16" rx="1.5"/></svg>',
+            vol:   '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>',
+            mute:  '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>',
+            fs:    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>',
+        };
+        const fmtTime = (t) => isFinite(t) ? `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}` : '0:00';
+
+        function player(m) {
+            const box = el('div', 'pv-player');
+            box.innerHTML =
+                '<div class="video-player-wrap">' +
+                    '<video playsinline preload="metadata"></video>' +
+                    '<div class="vc-click-zone"></div>' +
+                    `<div class="pv-player-play" aria-hidden="true">${ICON.play}</div>` +
+                    '<div class="vc-controls">' +
+                        '<div class="vc-progress-row"><input type="range" class="vc-progress" value="0" min="0" max="100" step="0.01" aria-label="Tidslinje"></div>' +
+                        '<div class="vc-bottom-row">' +
+                            '<div class="vc-left-group">' +
+                                `<button type="button" class="vc-btn vc-pp" aria-label="Spill av">${ICON.play}</button>` +
+                                '<div class="vc-vol-group">' +
+                                    `<button type="button" class="vc-btn vc-mute" aria-label="Lyd">${ICON.vol}</button>` +
+                                    '<input type="range" class="vc-vol-slider" value="100" min="0" max="100" step="1" aria-label="Volum">' +
+                                '</div>' +
+                                '<span class="vc-time">0:00 / 0:00</span>' +
+                            '</div>' +
+                            `<div class="vc-right-group"><button type="button" class="vc-btn vc-fs" aria-label="Fullskjerm">${ICON.fs}</button></div>` +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+
+            const wrap     = box.querySelector('.video-player-wrap');
+            const v        = box.querySelector('video');
+            const progress = box.querySelector('.vc-progress');
+            const timeEl   = box.querySelector('.vc-time');
+            const pp       = box.querySelector('.vc-pp');
+            const muteBtn  = box.querySelector('.vc-mute');
+            const volGroup = box.querySelector('.vc-vol-group');
+            const vol      = box.querySelector('.vc-vol-slider');
+            v.src = m.src;
+            v.setAttribute('aria-label', m.alt || '');
+
+            const toggle = () => v.paused ? v.play().catch(() => {}) : v.pause();
+            const syncPlay = () => {
+                box.classList.toggle('playing', !v.paused);
+                pp.innerHTML = v.paused ? ICON.play : ICON.pause;
+                pp.setAttribute('aria-label', v.paused ? 'Spill av' : 'Pause');
+            };
+            const syncVol = () => { muteBtn.innerHTML = (v.muted || v.volume === 0) ? ICON.mute : ICON.vol; };
+
+            v.addEventListener('play', syncPlay);
+            v.addEventListener('pause', syncPlay);
+            v.addEventListener('volumechange', syncVol);
+            v.addEventListener('loadedmetadata', () => { timeEl.textContent = `0:00 / ${fmtTime(v.duration)}`; });
+            v.addEventListener('timeupdate', () => {
+                if (!isFinite(v.duration)) return;
+                const pct = (v.currentTime / v.duration) * 100;
+                progress.value = pct;
+                progress.style.setProperty('--pct', pct + '%');
+                timeEl.textContent = `${fmtTime(v.currentTime)} / ${fmtTime(v.duration)}`;
+            });
+
+            progress.addEventListener('input', () => {
+                if (isFinite(v.duration)) v.currentTime = (progress.value / 100) * v.duration;
+            });
+            box.querySelector('.vc-click-zone').addEventListener('click', toggle);
+            pp.addEventListener('click', toggle);
+
+            vol.addEventListener('input', () => {
+                v.volume = vol.value / 100;
+                v.muted  = v.volume === 0;
+            });
+            // the speaker opens the slider (and unmutes), a second click closes it
+            muteBtn.addEventListener('click', () => {
+                const open = volGroup.classList.toggle('vc-vol-open');
+                if (open && v.muted) {
+                    v.muted = false;
+                    if (v.volume === 0) { v.volume = 0.5; vol.value = 50; }
+                }
+            });
+
+            box.querySelector('.vc-fs').addEventListener('click', () => {
+                document.fullscreenElement ? document.exitFullscreen().catch(() => {}) : wrap.requestFullscreen().catch(() => {});
+            });
+
+            // stop when scrolled away, so it never plays out of sight
+            new IntersectionObserver(([e]) => { if (!e.isIntersecting && !v.paused) v.pause(); }).observe(box);
+            return box;
+        }
+
         p.media.forEach(m => {
-            if (m.type === 'magasin') {
+            if (m.type === 'video' && m.src && m.kontroller) {
+                media.appendChild(player(m));
+            } else if (m.type === 'magasin') {
                 media.appendChild(magazine(m));
             } else if (m.type === 'par') {
                 const row = el('div', 'pv-row');
@@ -725,7 +854,7 @@
         let returnTo = null;
 
         [...media.children].forEach(node => {
-            if (node.matches('.pv-mag')) return;    // a magazine is read in place
+            if (node.matches('.pv-mag, .pv-player')) return;    // read / played in place
             const copy = node.cloneNode(true);
             copy.querySelectorAll('[tabindex]').forEach(x => {
                 x.removeAttribute('tabindex'); x.removeAttribute('role'); x.removeAttribute('aria-label');
@@ -769,7 +898,7 @@
                 else if (v.getAttribute('src')) v.pause();
             });
         }, { rootMargin: '300px 0px' });
-        media.querySelectorAll('video').forEach(v => videoWatch.observe(v));
+        media.querySelectorAll('.pv-item video').forEach(v => videoWatch.observe(v));
 
         // Opened by clicking any image: the view starts at that image
         function openFocus(i, trigger) {
@@ -791,7 +920,7 @@
             focus.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('pv-locked');
             focusScroll.querySelectorAll('video').forEach(v => v.pause());
-            media.querySelectorAll('video').forEach(v => {            // pick up where the page left off
+            media.querySelectorAll('.pv-item video').forEach(v => {   // pick up where the page left off (the loops only)
                 const r = v.getBoundingClientRect();
                 if (v.getAttribute('src') && r.bottom > 0 && r.top < innerHeight) startVideo(v);
             });
@@ -808,7 +937,7 @@
         for (let k = 1; k <= Math.min(3, list.length - 1); k++) {
             const q = list[(index + k) % list.length];
             const card = el('a', 'pf-card' + (q.cover ? '' : ' pf-card--empty'));
-            card.href = `prosjekt.html?p=${encodeURIComponent(q.id)}`;
+            card.href = q.lenke || `prosjekt.html?p=${encodeURIComponent(q.id)}`;
 
             const shot = el('div', 'pf-shot');
             if (q.cover) {

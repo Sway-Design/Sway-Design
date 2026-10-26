@@ -20,27 +20,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=57">
+    <link rel="stylesheet" href="style.css?v=58">
+    <!-- Opened on a section (arbeid.html#plakatdesign): keep the page hidden
+         under the navbar until it has jumped there, so the top of the page
+         never flashes first. Shown anyway after 2.5 s if anything stalls. -->
+    <style>
+        html.hash-wait body > :not(.navbar) { visibility: hidden; }
+    </style>
+    <script>
+        if (location.hash) {
+            document.documentElement.classList.add('hash-wait');
+            setTimeout(() => document.documentElement.classList.remove('hash-wait'), 2500);
+        }
+    </script>
 </head>
 <body>
 
-    <!-- UNDER-CONSTRUCTION TICKER -->
-    <div class="site-ticker" aria-hidden="true">
-        <div class="site-ticker-track">
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-            <span>NB: NETTSIDEN ER FORTSATT UNDER OPPBYGGING</span>
-        </div>
-    </div>
 
     <!-- NAVIGATION -->
     <header class="navbar scrolled" id="navbar">
@@ -194,7 +189,7 @@
     <!-- FOOTER -->
     <footer class="footer">
         <div class="container footer-inner">
-            <p class="footer-credit">Designed by Jonathan Kindingstad, built by Claude</p>
+            <p class="footer-credit">Website designed by Sway Design © 2026</p>
             <a href="https://www.instagram.com/sway_design/" target="_blank" rel="noopener" class="footer-ig" aria-label="Instagram">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -212,7 +207,7 @@
 // ════════════════════════════════════════════════════════════════
 
 const SECTION_ORDER = [
-    { folder: 'Plakat design', displayName: 'Plakatdesign', type: 'poster'   },
+    { folder: 'Plakat design', displayName: 'Plakatdesign', type: 'poster', id: 'plakatdesign' },
     { folder: 'Kles design',   displayName: 'Klesdesign',   type: 'clothing' },
 ];
 
@@ -343,6 +338,7 @@ async function initKreativt() {
 function buildSection(config, files, num, base) {
     const section = document.createElement('section');
     section.className = 'arbeid-section' + (num === 1 ? ' arbeid-section--first' : '');
+    if (config.id) section.id = config.id;          // linkable, e.g. arbeid.html#plakatdesign
 
     const container = document.createElement('div');
     container.className = 'container';
@@ -946,6 +942,7 @@ Promise.all([initArbeid(), initVideo(), initKreativt()]).then(() => {
 
     if (!location.hash) return;
     scrollToHash();
+    document.documentElement.classList.remove('hash-wait');
     document.querySelectorAll('#arbeid-main img').forEach(img => {
         if (!img.complete) img.addEventListener('load', scrollToHash, { once: true });
     });

@@ -78,15 +78,53 @@ if (navToggle && navbar) {
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 }
 
-// ─── Programvare keys: click sound + press feedback ─────────────────────────
+// ─── Programvare keys: a little piano + press feedback ──────────────────────
+// Every key plays the same click, tuned to the C major scale with Ai as C
+// (Ai keeps the original pitch): lowest on the left, highest on the right.
+// Today that's Ps Ae Pr | Ai | Id Figma Glyphs Claude = G A B | C | D E F G.
 const swKeys = document.querySelectorAll('.sw-key');
 if (swKeys.length) {
-    const keySound = new Audio('Elementer/Knapp.mp3');
-    keySound.preload = 'auto';
-    swKeys.forEach(key => {
+    const MAJOR = [0, 2, 4, 5, 7, 9, 11];                 // semitones of each scale step
+    const aiIndex = Math.max(0, [...swKeys].findIndex(k => k.textContent.trim() === 'Ai'));
+    const semitones = i => {
+        const step = i - aiIndex;                         // scale steps from Ai
+        const octave = Math.floor(step / 7);
+        return octave * 12 + MAJOR[step - octave * 7];
+    };
+    const rate = i => Math.pow(2, semitones(i) / 12);
+
+    // Web Audio so quick notes overlap like on a real piano; a plain <audio>
+    // copy per note if it isn't available.
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    const ctx = Ctx ? new Ctx() : null;
+    let buffer = null;
+    if (ctx) {
+        fetch('Elementer/Knapp.mp3')
+            .then(r => r.arrayBuffer())
+            .then(data => ctx.decodeAudioData(data))
+            .then(b => { buffer = b; })
+            .catch(() => {});
+    }
+
+    function playNote(i) {
+        if (ctx && buffer) {
+            if (ctx.state === 'suspended') ctx.resume();
+            const src = ctx.createBufferSource();
+            src.buffer = buffer;
+            src.playbackRate.value = rate(i);
+            src.connect(ctx.destination);
+            src.start();
+            return;
+        }
+        const a = new Audio('Elementer/Knapp.mp3');
+        a.preservesPitch = false;          // let the speed change the pitch
+        a.playbackRate = rate(i);
+        a.play().catch(() => {});
+    }
+
+    swKeys.forEach((key, i) => {
         key.addEventListener('click', () => {
-            keySound.currentTime = 0;
-            keySound.play().catch(() => {});
+            playNote(i);
             // brief press so a quick tap/click still shows the key go down
             key.classList.add('pressed');
             setTimeout(() => key.classList.remove('pressed'), 110);

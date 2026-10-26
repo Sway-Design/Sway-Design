@@ -421,12 +421,12 @@
     <!-- NAVIGATION -->
     <header class="navbar scrolled" id="navbar">
         <div class="nav-inner">
-            <a href="index.html" class="nav-brand visible"><img src="assets/sd-logo.png" alt="Sway Design" class="nav-logo"></a>
+            <a href="/" class="nav-brand visible"><img src="assets/sd-logo.png" alt="Sway Design" class="nav-logo"></a>
             <nav class="nav-links">
-                <a href="index.html" data-text="HJEM" class="nav-home">HJEM</a>
-                <a href="index.html#arbeid" data-text="ARBEID" style="color: var(--white); font-weight: 800;">ARBEID</a>
+                <a href="/" data-text="HJEM" class="nav-home">HJEM</a>
+                <a href="/#arbeid" data-text="ARBEID" style="color: var(--white); font-weight: 800;">ARBEID</a>
                 <a href="om-meg.html" data-text="OM MEG">OM MEG</a>
-                <a href="index.html#kontakt" data-text="KONTAKT">KONTAKT</a>
+                <a href="/#kontakt" data-text="KONTAKT">KONTAKT</a>
             </nav>
             <button class="nav-toggle" id="navToggle" aria-label="Åpne meny" aria-expanded="false">
                 <span></span><span></span><span></span>
@@ -439,7 +439,7 @@
 
             <!-- LEFT: what the project is -->
             <aside class="pv-left">
-                <a href="index.html#arbeid" class="pv-back">
+                <a href="/#arbeid" class="pv-back">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <line x1="19" y1="12" x2="5" y2="12"/>
                         <polyline points="12 19 5 12 12 5"/>
@@ -495,7 +495,7 @@
         const id    = new URLSearchParams(location.search).get('p');
         const index = list.findIndex(p => p.id === id);
         if (index < 0) {                       // unknown or missing project
-            location.replace('index.html#arbeid');
+            location.replace('/#arbeid');
             return;
         }
         const p = list[index];

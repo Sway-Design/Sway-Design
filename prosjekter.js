@@ -71,7 +71,16 @@
 
     window.PROSJEKTER = [
         rubix,
-        plassholder('02', 'App'),
+        {
+            id: '02',
+            tittel: 'App',
+            cover: 'portfolio-files/02-app/cover.jpg?v=3',
+            beskrivelse: [],
+            media: [
+                { type: 'video', src: 'portfolio-files/02-app/app-demo.mp4', kontroller: true, alt: 'Skjermopptak av app-prototypen: forside, grafer og oversikt over vann, CO2 og energi' },
+                { type: 'bilde', src: 'portfolio-files/02-app/komponenter.png', format: '1590 / 1132', alt: 'Komponenter fra appen: grafer, søyler og målere for vann, CO2 og energi' },
+            ],
+        },
         {
             ...plassholder('03', 'Magazines'),
             cover: 'portfolio-files/03-magazines/cover.jpg?v=1',

@@ -1693,6 +1693,14 @@ a {
     padding: 28px 0;
 }
 
+/* What shows past the end of the page (a phone's overscroll, the space behind
+   Safari's bottom bar) is the page's own background. On pages with a footer,
+   make that the footer's grey so it seems to run on to the bottom of the
+   screen; the body keeps the page black, and the page is no longer. */
+html:has(.footer) {
+    background: var(--dark);
+}
+
 .footer-inner {
     display: flex;
     align-items: center;

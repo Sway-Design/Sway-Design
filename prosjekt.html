@@ -488,7 +488,7 @@
         </div>
     </footer>
 
-    <script src="prosjekter.js?v=35"></script>
+    <script src="prosjekter.js?v=43"></script>
     <script>
     (function () {
         const list  = window.PROSJEKTER || [];
@@ -523,7 +523,11 @@
             const para = el('p');
             const label = el('strong');
             label.textContent = `${block.label}:`;
-            para.append(label, document.createTextNode(block.tekst));
+            para.append(label);
+            block.tekst.split('\n').forEach((line, k) => {         // \n in the text = a line break
+                if (k) para.appendChild(el('br'));
+                para.appendChild(document.createTextNode(line));
+            });
             desc.appendChild(para);
         });
 
@@ -550,6 +554,7 @@
                 v.setAttribute('aria-label', m.alt || '');
                 fig.appendChild(v);
                 if (m.lyd) fig.appendChild(soundButton());
+                if (m.lyd && m.lydFraStart) v.dataset.lydFraStart = '';
             } else if (m.src) {
                 const img = el('img');
                 img.src = m.src;
@@ -867,15 +872,46 @@
 
         // Load a video when it comes near the screen, play it while it's
         // visible, pause it when it isn't (saves battery on phones).
-        // Videos start muted (browsers only autoplay silent video); the sound
-        // button turns sound on for that video, both on the page and in the
-        // focus view.
-        const soundOn = new Set();
+        // Videos start muted, except those marked lydFraStart; the sound
+        // button turns sound on or off for that video, both on the page and in
+        // the focus view.
+        const soundOn = new Set(
+            [...media.querySelectorAll('video[data-lyd-fra-start]')].map(v => v.dataset.src)
+        );
+
+        // The button always shows what you actually hear
+        const showSound = (v) => {
+            const btn = v.parentElement.querySelector('.pv-sound');
+            if (!btn) return;
+            btn.setAttribute('aria-pressed', String(!v.muted));
+            btn.setAttribute('aria-label', v.muted ? 'Slå på lyd' : 'Slå av lyd');
+        };
+        document.querySelectorAll('.pv-item video, .pv-focus video').forEach(v =>
+            v.addEventListener('volumechange', () => showSound(v)));
+
+        // Browsers won't start sound until the visitor has clicked or tapped the
+        // site. If that's the case, play silently for now and turn the sound on
+        // at the first click, tap or key press anywhere on the page.
+        let waitingForGesture = false;
         const startVideo = (v) => {
             if (!v.getAttribute('src') && v.dataset.src) v.src = v.dataset.src;
             v.muted = !soundOn.has(v.dataset.src);
-            v.play().catch(() => {});
+            v.play().catch(() => {
+                if (v.muted) return;
+                v.muted = true;
+                v.play().catch(() => {});
+                waitingForGesture = true;
+            });
+            showSound(v);
         };
+        const soundOnGesture = (e) => {
+            if (!waitingForGesture || e.target.closest('.pv-sound')) return;   // the button handles itself
+            waitingForGesture = false;
+            document.querySelectorAll('.pv-item video, .pv-focus video').forEach(v => {
+                if (soundOn.has(v.dataset.src) && v.muted && !v.paused) v.muted = false;
+            });
+        };
+        ['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, soundOnGesture, true));
 
         document.addEventListener('click', (e) => {
             const b = e.target.closest('.pv-sound');

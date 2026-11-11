@@ -95,11 +95,32 @@ if (coverLoops.length) {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         coverLoops.forEach(v => v.remove());            // the still cover underneath stays
     } else {
+        const inView = new Set();
         const watch = new IntersectionObserver(entries => entries.forEach(({ target: v, isIntersecting }) => {
-            if (isIntersecting) v.play().catch(() => {});   // blocked (e.g. Low Power Mode): the still shows
-            else v.pause();
+            if (isIntersecting) {
+                inView.add(v);
+                if (!v.holding) v.play().catch(() => {});   // blocked (e.g. Low Power Mode): the still shows
+            } else {
+                inView.delete(v);
+                v.pause();
+            }
         }), { rootMargin: '200px 0px' });
-        coverLoops.forEach(v => watch.observe(v));
+        coverLoops.forEach(v => {
+            // data-hold="1": the last frame stays for that many seconds before it starts over
+            const hold = parseFloat(v.dataset.hold);
+            if (hold > 0) {
+                v.loop = false;
+                v.addEventListener('ended', () => {
+                    v.holding = true;
+                    setTimeout(() => {
+                        v.holding = false;
+                        v.currentTime = 0;
+                        if (inView.has(v)) v.play().catch(() => {});
+                    }, hold * 1000);
+                });
+            }
+            watch.observe(v);
+        });
     }
 }
 

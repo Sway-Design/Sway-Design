@@ -488,7 +488,7 @@
         </div>
     </footer>
 
-    <script src="prosjekter.js?v=50"></script>
+    <script src="prosjekter.js?v=51"></script>
     <script>
     (function () {
         const list  = window.PROSJEKTER || [];
@@ -991,6 +991,7 @@
                     loop.src = q.coverLoop;
                     loop.muted = true; loop.loop = true; loop.playsInline = true;
                     loop.preload = 'metadata';
+                    if (q.coverLoopHold) loop.dataset.hold = q.coverLoopHold;
                     loop.setAttribute('aria-hidden', 'true');
                     shot.appendChild(loop);
                 }
@@ -1011,6 +1012,6 @@
         }
     })();
     </script>
-    <script src="script.js?v=47"></script>
+    <script src="script.js?v=48"></script>
 </body>
 </html>

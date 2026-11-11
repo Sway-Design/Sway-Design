@@ -10,6 +10,8 @@
 //  coverLoop    optional: a short silent video that loops on the card,
 //               over the cover image (which shows if it can't play)
 //  coverLoopFit true: fit the loop whole instead of cropping it to 4:3
+//  coverLoopHold seconds the loop's last frame stays before it starts over
+//               (on the front page: data-hold on the card's <video>)
 //  lenke        optional: the card goes here instead of a project view
 //  beskrivelse  blocks in the left column, separated by thin lines;
 //               \n in a text is a line break (\n\n leaves an empty line)
@@ -109,6 +111,7 @@
             tittel: 'Motion Video',
             cover: 'portfolio-files/04-motion-video/cover.jpg?v=3',
             coverLoop: 'portfolio-files/04-motion-video/cover-loop.mp4?v=3',
+            coverLoopHold: 1,
             beskrivelse: [
                 { label: 'Konsept', tekst: 'Personlig prosjekt fra 2025 der målet var å lære mest mulig om motion graphics ved å lage en promovideo.' },
                 { label: 'Resultat', tekst: 'Etter flere timer foran skjermen i AfterEffect og YouTube endte jeg opp med en 30 sekunders animasjon der alt det visuelle er laget 100 % av meg. Det var utrolig mange utfordringer, og jeg lærte mye om de ulike animasjonsprinsippene og fikk brukt dem i kombinasjon med musikk.' },

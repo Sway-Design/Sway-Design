@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=69">
+    <link rel="stylesheet" href="style.css?v=71">
     <style>
         /* ── Project view ──────────────────────────────────────────────
            Text column on the left stays put while the work scrolls past
@@ -488,7 +488,7 @@
         </div>
     </footer>
 
-    <script src="prosjekter.js?v=48"></script>
+    <script src="prosjekter.js?v=50"></script>
     <script>
     (function () {
         const list  = window.PROSJEKTER || [];
@@ -928,12 +928,19 @@
             });
             if (on) v.play().catch(() => {});
         });
+        // A video plays while at least half of it is on screen and pauses as
+        // soon as it's scrolled further away than that (up or down).
+        const halfVisible = (v) => {
+            const r = v.getBoundingClientRect();
+            const seen = Math.min(r.bottom, innerHeight) - Math.max(r.top, 0);
+            return r.height > 0 && seen >= Math.min(r.height, innerHeight) / 2;
+        };
         const videoWatch = new IntersectionObserver((entries) => {
-            entries.forEach(({ target: v, isIntersecting }) => {
-                if (isIntersecting) startVideo(v);
-                else if (v.getAttribute('src')) v.pause();
+            entries.forEach(({ target: v }) => {
+                if (halfVisible(v)) { if (v.paused) startVideo(v); }
+                else if (v.getAttribute('src') && !v.paused) v.pause();
             });
-        }, { rootMargin: '300px 0px' });
+        }, { threshold: Array.from({ length: 21 }, (_, i) => i / 20) });
         media.querySelectorAll('.pv-item video').forEach(v => videoWatch.observe(v));
 
         // Opened by clicking any image: the view starts at that image
@@ -957,8 +964,7 @@
             document.body.classList.remove('pv-locked');
             focusScroll.querySelectorAll('video').forEach(v => v.pause());
             media.querySelectorAll('.pv-item video').forEach(v => {   // pick up where the page left off (the loops only)
-                const r = v.getBoundingClientRect();
-                if (v.getAttribute('src') && r.bottom > 0 && r.top < innerHeight) startVideo(v);
+                if (v.getAttribute('src') && halfVisible(v)) startVideo(v);
             });
             if (returnTo) returnTo.focus({ preventScroll: true });
         }

@@ -39,9 +39,9 @@
         tittel: 'Rubix Curve',
         cover: `${dir}/cover.jpg?v=2`,
         beskrivelse: [
-            { label: 'Oppgave', tekst: 'Utvikle en skrifttype basert på så få moduler som mulig.' },
-            { label: 'Konsept', tekst: 'Rubix Curve er en modulbasert egenlaget display-font utviklet i Glyphs. Hver eneste bokstav er bygget av bare to former – et kvadrat og et kvadrat med ett avrundet hjørne – brukt i 100%, 2/3 og 5% størrelse. Det gir fonten en stram, konstruert logikk, mens de runde hjørnene gjør den myk og vennlig.' },
-            { label: 'Konstruksjon', tekst: 'Bokstavene settes sammen i et 2\u00d72-rutenett, med enkelte unntak i 3\u00d73 der lesbarheten krever det. Alle tegn er optisk justert, og avstanden mellom bokstavene er like stor som åpningene inne i dem, slik at ord og setninger står som tette, jevne blokker. Versjon 2 kommer i Bold, med et fullt tegnsett fra A til Å, tall og skilletegn.' },
+            { label: 'Oppgave', tekst: 'Lag en skrifttype basert på så få moduler som mulig.' },
+            { label: 'Konsept', tekst: 'Rubix Curve er en modulbasert egenlaget displayfont utviklet i Glyphs. Hver bokstav fyller et kvadrat med avrundede hjørner og negative striper som danner bokstavene. Hver eneste bokstav er bygget av bare to former: et kvadrat og et kvadrat med ett avrundet hjørne, brukt i størrelsene 100 %, 2/3 (66,6 %) og 5 %.' },
+            { label: 'Konstruksjon', tekst: 'Modulene settes sammen i et 2\u00d72-rutenett, med enkelte unntak i 3\u00d73 der lesbarheten krever det. Alle tegn er optisk justert, og avstanden mellom bokstavene er like stor som åpningene inne i dem, slik at ord og setninger står som tette, jevne blokker. Versjon 2 kommer i Bold, med et fullt tegnsett fra A til Å, tall og skilletegn.' },
         ],
         media: [
             { type: 'bilde', src: `${dir}/01-tittel.png`,       format: '8 / 3',  alt: 'Navnet Rubix Curve satt i fonten, v.2, ©2026' },
@@ -84,8 +84,8 @@
             cover: 'portfolio-files/02-app/cover.jpg?v=3',
             beskrivelse: [
                 { label: 'Oppgave', tekst: 'Design et interaktivt uttrykk knyttet til temaet «Unsustainability».' },
-                { label: 'Idé', tekst: 'En statlig eid app som holder oversikt over utslippene dine – og gir deg fordeler jo mer miljøvennlig du lever.' },
-                { label: 'Utførelse', tekst: 'Appen er designet i Figma på under tre uker. Den bygger på et poengsystem der −100 tilsvarer utslippene til en gjennomsnittlig person, 0 er nøytralt, og +100 betyr at du bidrar like mye som en gjennomsnittlig person forurenser. Jo høyere poengsum, desto flere fordeler får du – som billigere kollektivtransport, billigere grønn energi og fordeler ved andre miljøvennlige valg. Appen gir deg også tips, statistikk, personliggjøring og oppdateringer.\n\nDet siste bildet viser grafer og andre UI-elementer som ikke ble med i den ferdige appen.' },
+                { label: 'Idé', tekst: 'En statlig eid app som holder oversikt over utslippene dine og gir deg fordeler jo mer miljøvennlig du lever.' },
+                { label: 'Utførelse', tekst: 'Appen er designet i Figma på under tre uker. Den bygger på et poengsystem der −100 tilsvarer utslippene til en gjennomsnittlig person, 0 er nøytralt, og +100 betyr at du bidrar like mye som en gjennomsnittlig person forurenser. Jo høyere poengsum, desto flere fordeler får du, for eksempel billigere kollektivtransport, billigere grønn energi og fordeler ved andre miljøvennlige handlinger. Appen gir deg også tips, statistikk, personliggjøring og oppdateringer.\n\nDet siste bildet viser grafer og andre UI-elementer som ikke ble med i den ferdige appen.' },
             ],
             media: [
                 { type: 'video', src: 'portfolio-files/02-app/app-demo.mp4', kontroller: true, alt: 'Skjermopptak av app-prototypen: forside, grafer og oversikt over vann, CO2 og energi' },
@@ -97,7 +97,7 @@
             cover: 'portfolio-files/03-magazines/cover.jpg?v=1',
             beskrivelse: [
                 { label: 'Konsept', tekst: 'Personlige prosjekter fra 2023. Jeg kom opp med konsept, layout, typografi og det visuelle uttrykket. Bildene er hentet fra nettet.' },
-                { label: 'Resultat', tekst: 'Begge magasinene er trykket i flere fysiske eksemplarer. De var også med i opptaksprøven min til Fakultet for kunst, musikk og design, der jeg studerer i dag – og en av grunnene til at jeg kom inn.' },
+                { label: 'Resultat', tekst: 'Begge magasinene er trykket i flere fysiske eksemplarer. De var også med i opptaksprøven min til Fakultet for kunst, musikk og design, der jeg studerer i dag, og var en av grunnene til at jeg kom inn.' },
             ],
             media: [
                 { type: 'magasin', tittel: 'Her Loss', mappe: 'arbeid-files/Her Loss Magasin', sider: 62 },
@@ -110,7 +110,8 @@
             cover: 'portfolio-files/04-motion-video/cover.jpg?v=3',
             coverLoop: 'portfolio-files/04-motion-video/cover-loop.mp4?v=3',
             beskrivelse: [
-                { label: 'Konsept', tekst: 'Personlig prosjekt fra 2025 der målet var å lære mest mulig om After Effects. Ved å lage denne promovideoen lærte jeg utrolig mye om hvordan After Effects fungerer og er bygget opp, og hvordan man kan bruke det.' },
+                { label: 'Konsept', tekst: 'Personlig prosjekt fra 2025 der målet var å lære mest mulig om motion graphics ved å lage en promovideo.' },
+                { label: 'Resultat', tekst: 'Etter flere timer foran skjermen i AfterEffect og YouTube endte jeg opp med en 30 sekunders animasjon der alt det visuelle er laget 100 % av meg. Det var utrolig mange utfordringer, og jeg lærte mye om de ulike animasjonsprinsippene og fikk brukt dem i kombinasjon med musikk.' },
             ],
             media: [
                 { type: 'video', src: 'video-files/Motion%20Graphics/promo-video.mp4', format: '16 / 9', kontroller: true, alt: 'Promovideo for Sway Design med animert typografi' },
@@ -124,7 +125,7 @@
             coverLoop: 'portfolio-files/05-video/cover-loop.mp4?v=1',
             coverLoopFit: true,
             beskrivelse: [
-                { label: 'Konsept', tekst: 'Personlig prosjekt for å gjøre en idé til virkelighet. Jeg hadde en klar visjon for introen, med den røde teksten og det retro uttrykket. Introen trengte noe å bli etterfulgt av, så jeg fikk bruke videomateriale fra Tobias Sjåfjell som jeg klippet inn.' },
+                { label: 'Konsept', tekst: 'Personlig prosjekt for å klø i det kreative hjørnet. Jeg hadde en klar visjon for introen, med den røde teksten og det retro uttrykket. Introen trengte noe å bli etterfulgt av, så jeg fikk bruke videomateriale fra Tobias Sjåfjell som jeg klippet inn.' },
                 { label: 'Sang', tekst: 'Icon – Jaden & STAY HERE 4 LIFE (feat. Brent Faiyaz)' },
             ],
             media: [

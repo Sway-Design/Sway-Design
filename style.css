@@ -559,11 +559,10 @@ a {
     transform: none;
 }
 
-/* No hover on touch screens, so the arrow is always there */
-@media (hover: none) {
+/* No arrow on phones and touch screens: the whole card is the link */
+@media (hover: none), (max-width: 768px) {
     .pf-arrow {
-        opacity: 1;
-        transform: none;
+        display: none;
     }
 }
 
@@ -726,8 +725,8 @@ a {
     transform: translateX(calc(-50% + 94px)) rotate(11deg);
 }
 
-/* The heading sized to fill its column exactly, on one line: 8.1% of the
-   column's width is just under where "Prosjektdybden du ønsker" fits (8.17).
+/* The heading sized to fill its column exactly, on one line: 7.38% of the
+   column's width is just under where "Prosjektstørrelsen du ønsker" fits (7.43).
    Re-measure if the heading text changes. */
 .produkter-copy {
     container-type: inline-size;
@@ -735,7 +734,7 @@ a {
 
 .produkter-heading {
     font-size: clamp(26px, 3.2vw, 40px);   /* browsers without container units */
-    font-size: 8.1cqw;
+    font-size: 7.38cqw;
     white-space: nowrap;
     font-weight: 700;
     line-height: 1.18;
@@ -847,7 +846,6 @@ a {
     gap: 9px;
     padding: 9px 18px;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 100px;
     font-size: 12px;
     font-weight: 500;

@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=59">
+    <link rel="stylesheet" href="style.css?v=69">
     <style>
         /* ── Project view ──────────────────────────────────────────────
            Text column on the left stays put while the work scrolls past
@@ -488,7 +488,7 @@
         </div>
     </footer>
 
-    <script src="prosjekter.js?v=43"></script>
+    <script src="prosjekter.js?v=48"></script>
     <script>
     (function () {
         const list  = window.PROSJEKTER || [];
@@ -980,6 +980,14 @@
                 const img = el('img');
                 img.src = q.cover; img.alt = ''; img.loading = 'lazy';
                 shot.appendChild(img);
+                if (q.coverLoop) {
+                    const loop = el('video', 'pf-loop' + (q.coverLoopFit ? ' pf-loop--fit' : ''));
+                    loop.src = q.coverLoop;
+                    loop.muted = true; loop.loop = true; loop.playsInline = true;
+                    loop.preload = 'metadata';
+                    loop.setAttribute('aria-hidden', 'true');
+                    shot.appendChild(loop);
+                }
             } else {
                 const label = el('span', 'pf-empty');
                 label.textContent = q.tittel;
@@ -997,6 +1005,6 @@
         }
     })();
     </script>
-    <script src="script.js?v=45"></script>
+    <script src="script.js?v=47"></script>
 </body>
 </html>

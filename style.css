@@ -286,6 +286,42 @@ a {
     background-size: cover;
     background-position: center;
     z-index: 0;
+    /* Barely-there life: the blurred wallpaper slowly breathes and drifts, so
+       the colours seem to shift. Slightly enlarged so no edge ever shows. */
+    transform: scale(1.08);
+    animation: hero-drift 30s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+/* A soft warm glow wandering across it on its own, slower rhythm, so the two
+   never line up the same way twice. */
+.hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: -20%;
+    background: radial-gradient(38% 32% at 68% 58%, rgba(255, 96, 24, 0.38), transparent 70%);
+    mix-blend-mode: screen;
+    animation: hero-glow 22s ease-in-out infinite alternate;
+    will-change: transform, opacity;
+}
+
+@keyframes hero-drift {
+    0%   { transform: scale(1.08) translate(0, 0); }
+    50%  { transform: scale(1.12) translate(-2%, 1.5%); }
+    100% { transform: scale(1.09) translate(1.5%, -1%); }
+}
+
+@keyframes hero-glow {
+    0%   { transform: translate(-12%, 6%);  opacity: 0.55; }
+    50%  { transform: translate(-2%, -6%);  opacity: 1; }
+    100% { transform: translate(8%, 4%);    opacity: 0.7; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-bg,
+    .hero-bg::before {
+        animation: none;
+    }
 }
 
 .hero-bg::after {
@@ -538,6 +574,24 @@ a {
     display: block;
 }
 
+/* A looping cover (prosjekter.js coverLoop), laid over the still cover so the
+   still shows until the first frame — or instead, if it can't play. */
+.pf-loop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+/* coverLoopFit: a 16:9 film whose title mustn't be cropped is fitted instead,
+   scaled to match how its still cover is framed (the film's black fills in). */
+.pf-loop--fit {
+    object-fit: contain;
+    transform: scale(1.1333);
+}
+
 /* An empty slot, until the real project goes in */
 .pf-card--empty .pf-shot {
     display: flex;
@@ -577,8 +631,11 @@ a {
     max-width: 340px;
 }
 
+/* "Vil du se mer?" and the contact heading take the size of "Prosjektdybden du
+   ønsker", which is fitted to its column — script.js copies it into
+   --heading-size. The fallbacks are for the moment before that runs. */
 .ark-heading {
-    font-size: 25px;
+    font-size: var(--heading-size, 39px);
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: -0.02em;
@@ -669,8 +726,17 @@ a {
     transform: translateX(calc(-50% + 94px)) rotate(11deg);
 }
 
+/* The heading sized to fill its column exactly, on one line: 8.1% of the
+   column's width is just under where "Prosjektdybden du ønsker" fits (8.17).
+   Re-measure if the heading text changes. */
+.produkter-copy {
+    container-type: inline-size;
+}
+
 .produkter-heading {
-    font-size: clamp(26px, 3.2vw, 40px);
+    font-size: clamp(26px, 3.2vw, 40px);   /* browsers without container units */
+    font-size: 8.1cqw;
+    white-space: nowrap;
     font-weight: 700;
     line-height: 1.18;
     color: var(--white);
@@ -685,48 +751,11 @@ a {
     font-size: 1.08em;
 }
 
-.tjeneste-list {
-    list-style: none;
-    margin: 4px 0 0;
-    padding: 0;
-    max-width: 380px;
-}
-
-.tjeneste-list li {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 10px 0;
+/* A line under the heading on the range of work, from quick jobs to brands */
+.produkter-intro {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.85);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.tjeneste-list li span {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.45);
-    text-align: right;
-}
-
-.tjeneste-note {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.6);
-    margin-top: 16px;
-}
-
-/* section-label is still used in kontakt */
-.section-label {
-    display: inline-block;
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    color: var(--gray-2);
-    margin-bottom: 18px;
-    text-transform: uppercase;
-}
-
-.section-label.amber {
-    color: var(--amber);
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.72);
 }
 
 /* =====================
@@ -748,13 +777,12 @@ a {
 }
 
 .kontakt-heading {
-    font-size: clamp(32px, 4.5vw, 48px);
+    font-size: var(--heading-size, 39px);
     font-weight: 700;
     line-height: 1.12;
     letter-spacing: -0.02em;
     color: var(--white);
     margin-bottom: 14px;
-    margin-top: 4px;
 }
 
 .kontakt-heading em {
@@ -1761,9 +1789,10 @@ html:has(.footer) {
         text-align: center;
     }
 
-    .tjeneste-list {
-        margin: 4px auto 0;
-        text-align: left;
+    .produkter-intro {
+        max-width: 380px;          /* centred under the heading: keep lines short */
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .pf-grid {

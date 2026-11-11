@@ -78,6 +78,31 @@ if (navToggle && navbar) {
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 }
 
+// ─── One heading size: the fitted "Prosjektdybden" heading sets it ─────────
+// Its size follows its column (style.css, cqw); the other big headings on
+// the front page use the same size through --heading-size.
+const fittedHeading = document.querySelector('.produkter-heading');
+if (fittedHeading) {
+    const shareSize = () => document.documentElement.style.setProperty(
+        '--heading-size', getComputedStyle(fittedHeading).fontSize);
+    new ResizeObserver(shareSize).observe(fittedHeading.parentElement);
+    shareSize();
+}
+
+// ─── Looping card covers: play while on screen, still image otherwise ───────
+const coverLoops = document.querySelectorAll('.pf-loop');
+if (coverLoops.length) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        coverLoops.forEach(v => v.remove());            // the still cover underneath stays
+    } else {
+        const watch = new IntersectionObserver(entries => entries.forEach(({ target: v, isIntersecting }) => {
+            if (isIntersecting) v.play().catch(() => {});   // blocked (e.g. Low Power Mode): the still shows
+            else v.pause();
+        }), { rootMargin: '200px 0px' });
+        coverLoops.forEach(v => watch.observe(v));
+    }
+}
+
 // ─── Programvare keys: a little piano + press feedback ──────────────────────
 // Every key plays the same click, tuned to the C major scale with Ai as C
 // (Ai keeps the original pitch): lowest on the left, highest on the right.

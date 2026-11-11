@@ -7,6 +7,9 @@
 //  id           matches the link on the front page (prosjekt.html?p=01)
 //  tittel       project name
 //  cover        card image (4:3); null shows an empty placeholder
+//  coverLoop    optional: a short silent video that loops on the card,
+//               over the cover image (which shows if it can't play)
+//  coverLoopFit true: fit the loop whole instead of cropping it to 4:3
 //  lenke        optional: the card goes here instead of a project view
 //  beskrivelse  blocks in the left column, separated by thin lines;
 //               \n in a text is a line break (\n\n leaves an empty line)
@@ -46,7 +49,7 @@
             { type: 'bilde', src: `${dir}/02-konstruksjon.jpg`, format: '4 / 3',  alt: 'Konstruksjonstegning av bokstaven A med mål, x-høyde og grunnlinje' },
             { type: 'bilde', src: `${dir}/03-moduler.jpg`,      format: '4 / 3',  alt: 'De to modulene og 2×2-rutenettet som bokstavene bygges av' },
             { type: 'bilde', src: `${dir}/04-tegnsett.png`,     format: '16 / 9', alt: 'Hele tegnsettet: bokstaver med Æ, Ø og Å, tall og skilletegn' },
-            { type: 'bilde', src: `${dir}/05-rubix.png`,        format: '4 / 3',  alt: 'Ordet RUBIX tegnet som omriss på et blått rutenett' },
+            { type: 'bilde', src: `${dir}/05-rubix.jpg`,        format: '2000 / 844', alt: 'Ordet RUBIX tegnet som omriss på et blått rutenett' },
             { type: 'bilde', src: `${dir}/06-setning.jpg`,      format: '16 / 9', alt: '«The quick brown fox jumps over the lazy dog» satt i fonten, med håndskrevne kommentarer' },
         ],
     };
@@ -105,6 +108,7 @@
             id: '04',
             tittel: 'Motion Video',
             cover: 'portfolio-files/04-motion-video/cover.jpg?v=3',
+            coverLoop: 'portfolio-files/04-motion-video/cover-loop.mp4?v=3',
             beskrivelse: [
                 { label: 'Konsept', tekst: 'Personlig prosjekt fra 2025 der målet var å lære mest mulig om After Effects. Ved å lage denne promovideoen lærte jeg utrolig mye om hvordan After Effects fungerer og er bygget opp, og hvordan man kan bruke det.' },
             ],
@@ -117,6 +121,8 @@
             id: '05',
             tittel: 'Video',
             cover: 'portfolio-files/05-video/cover.jpg?v=1',
+            coverLoop: 'portfolio-files/05-video/cover-loop.mp4?v=1',
+            coverLoopFit: true,
             beskrivelse: [
                 { label: 'Konsept', tekst: 'Personlig prosjekt for å gjøre en idé til virkelighet. Jeg hadde en klar visjon for introen, med den røde teksten og det retro uttrykket. Introen trengte noe å bli etterfulgt av, så jeg fikk bruke videomateriale fra Tobias Sjåfjell som jeg klippet inn.' },
                 { label: 'Sang', tekst: 'Icon – Jaden & STAY HERE 4 LIFE (feat. Brent Faiyaz)' },
